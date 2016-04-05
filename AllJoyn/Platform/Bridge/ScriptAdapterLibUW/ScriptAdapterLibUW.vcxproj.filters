@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Deps">
+      <UniqueIdentifier>{9db435d5-40a3-44b5-9c10-e2b27b1f6e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deps\inc">
+      <UniqueIdentifier>{00e17fea-42d8-4d2c-acaf-ef282a197eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdapterFiles">
+      <UniqueIdentifier>{dc43c8dd-7cb0-4423-8e6b-ab5281131799}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ScriptAdapterLibUW.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\ScriptAdapterLib\JsAdapter.cpp">
+      <Filter>AdapterFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ScriptAdapterLibUW.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\ScriptAdapterLib\Deps\inc\jx.h">
+      <Filter>Deps\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\Deps\inc\jx_result.h">
+      <Filter>Deps\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\AsyncQueue.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\JsAdapter.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\ScriptHost.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\WorkItemDispatcher.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\IJsAdapter.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

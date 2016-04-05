@@ -1,0 +1,596 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BF62D96E1C975E1400D2BD30 /* Bridge.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF62D96D1C975E1400D2BD30 /* Bridge.h */; };
+		BF62D9701C975E1400D2BD30 /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BF62D96F1C975E1400D2BD30 /* Bridge.m */; };
+		BF62D9761C975E1500D2BD30 /* libBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF62D96A1C975E1400D2BD30 /* libBridge.a */; };
+		BF62D9CE1C975E7500D2BD30 /* AdapterDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9861C975E7500D2BD30 /* AdapterDevice.cpp */; };
+		BF62D9CF1C975E7500D2BD30 /* AllJoynAbout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9881C975E7500D2BD30 /* AllJoynAbout.cpp */; };
+		BF62D9D01C975E7500D2BD30 /* AllJoynAboutIcon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D98A1C975E7500D2BD30 /* AllJoynAboutIcon.cpp */; };
+		BF62D9D11C975E7500D2BD30 /* AllJoynFileTransfer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D98C1C975E7500D2BD30 /* AllJoynFileTransfer.cpp */; };
+		BF62D9D21C975E7500D2BD30 /* AllJoynHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D98E1C975E7500D2BD30 /* AllJoynHelper.cpp */; };
+		BF62D9D31C975E7500D2BD30 /* AllJoynProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9901C975E7500D2BD30 /* AllJoynProperty.cpp */; };
+		BF62D9D41C975E7500D2BD30 /* Bridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9921C975E7500D2BD30 /* Bridge.cpp */; };
+		BF62D9D51C975E7500D2BD30 /* BridgeAuthHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9941C975E7500D2BD30 /* BridgeAuthHandler.cpp */; };
+		BF62D9D61C975E7500D2BD30 /* BridgeConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9971C975E7500D2BD30 /* BridgeConfig.cpp */; };
+		BF62D9D71C975E7500D2BD30 /* BridgeDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9991C975E7500D2BD30 /* BridgeDevice.cpp */; };
+		BF62D9D81C975E7500D2BD30 /* CommonUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D99D1C975E7500D2BD30 /* CommonUtils.cpp */; };
+		BF62D9D91C975E7500D2BD30 /* ConfigManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D99F1C975E7500D2BD30 /* ConfigManager.cpp */; };
+		BF62D9DA1C975E7500D2BD30 /* ControlPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9A11C975E7500D2BD30 /* ControlPanel.cpp */; };
+		BF62D9DB1C975E7500D2BD30 /* CspAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9A31C975E7500D2BD30 /* CspAdapter.cpp */; };
+		BF62D9DC1C975E7500D2BD30 /* CspBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9A51C975E7500D2BD30 /* CspBridge.cpp */; };
+		BF62D9DD1C975E7500D2BD30 /* DeviceMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9A71C975E7500D2BD30 /* DeviceMain.cpp */; };
+		BF62D9DE1C975E7500D2BD30 /* DeviceMethod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9A91C975E7500D2BD30 /* DeviceMethod.cpp */; };
+		BF62D9DF1C975E7500D2BD30 /* DeviceProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9AB1C975E7500D2BD30 /* DeviceProperty.cpp */; };
+		BF62D9E01C975E7500D2BD30 /* DeviceSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9AD1C975E7500D2BD30 /* DeviceSignal.cpp */; };
+		BF62D9E21C975E7500D2BD30 /* pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9B51C975E7500D2BD30 /* pch.cpp */; };
+		BF62D9E31C975E7500D2BD30 /* PropertyInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9B71C975E7500D2BD30 /* PropertyInterface.cpp */; };
+		BF62D9E41C975E7500D2BD30 /* Widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9BB1C975E7500D2BD30 /* Widget.cpp */; };
+		BF62D9E51C975E7500D2BD30 /* WidgetAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9BD1C975E7500D2BD30 /* WidgetAction.cpp */; };
+		BF62D9E61C975E7500D2BD30 /* WidgetContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9C01C975E7500D2BD30 /* WidgetContainer.cpp */; };
+		BF62D9E71C975E7500D2BD30 /* WidgetProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9C21C975E7500D2BD30 /* WidgetProperty.cpp */; };
+		BF62D9E81C975E7500D2BD30 /* WidgetPropertyLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9C41C975E7500D2BD30 /* WidgetPropertyLabel.cpp */; };
+		BF62D9E91C975E7500D2BD30 /* WidgetPropertySwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9C61C975E7500D2BD30 /* WidgetPropertySwitch.cpp */; };
+		BF62D9EA1C975E7500D2BD30 /* WidgetPropertyTextBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9C81C975E7500D2BD30 /* WidgetPropertyTextBox.cpp */; };
+		BF62D9EB1C975E7500D2BD30 /* WidgetSignalHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9CA1C975E7500D2BD30 /* WidgetSignalHandler.cpp */; };
+		BF62D9EC1C975E7500D2BD30 /* XmlUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF62D9CC1C975E7500D2BD30 /* XmlUtil.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BF62D9771C975E1500D2BD30 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF62D9621C975E1400D2BD30 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BF62D9691C975E1400D2BD30;
+			remoteInfo = Bridge;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BF62D9681C975E1400D2BD30 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				BF62D96E1C975E1400D2BD30 /* Bridge.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		BF62D96A1C975E1400D2BD30 /* libBridge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBridge.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF62D96D1C975E1400D2BD30 /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
+		BF62D96F1C975E1400D2BD30 /* Bridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Bridge.m; sourceTree = "<group>"; };
+		BF62D9751C975E1500D2BD30 /* BridgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF62D97B1C975E1500D2BD30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BF62D9841C975E7500D2BD30 /* AdapterConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdapterConstants.h; path = ../../../BridgeCore/AdapterConstants.h; sourceTree = "<group>"; };
+		BF62D9851C975E7500D2BD30 /* AdapterDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdapterDefinitions.h; path = ../../../BridgeCore/AdapterDefinitions.h; sourceTree = "<group>"; };
+		BF62D9861C975E7500D2BD30 /* AdapterDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdapterDevice.cpp; path = ../../../BridgeCore/AdapterDevice.cpp; sourceTree = "<group>"; };
+		BF62D9871C975E7500D2BD30 /* AdapterDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdapterDevice.h; path = ../../../BridgeCore/AdapterDevice.h; sourceTree = "<group>"; };
+		BF62D9881C975E7500D2BD30 /* AllJoynAbout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllJoynAbout.cpp; path = ../../../BridgeCore/AllJoynAbout.cpp; sourceTree = "<group>"; };
+		BF62D9891C975E7500D2BD30 /* AllJoynAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllJoynAbout.h; path = ../../../BridgeCore/AllJoynAbout.h; sourceTree = "<group>"; };
+		BF62D98A1C975E7500D2BD30 /* AllJoynAboutIcon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllJoynAboutIcon.cpp; path = ../../../BridgeCore/AllJoynAboutIcon.cpp; sourceTree = "<group>"; };
+		BF62D98B1C975E7500D2BD30 /* AllJoynAboutIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllJoynAboutIcon.h; path = ../../../BridgeCore/AllJoynAboutIcon.h; sourceTree = "<group>"; };
+		BF62D98C1C975E7500D2BD30 /* AllJoynFileTransfer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllJoynFileTransfer.cpp; path = ../../../BridgeCore/AllJoynFileTransfer.cpp; sourceTree = "<group>"; };
+		BF62D98D1C975E7500D2BD30 /* AllJoynFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllJoynFileTransfer.h; path = ../../../BridgeCore/AllJoynFileTransfer.h; sourceTree = "<group>"; };
+		BF62D98E1C975E7500D2BD30 /* AllJoynHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllJoynHelper.cpp; path = ../../../BridgeCore/AllJoynHelper.cpp; sourceTree = "<group>"; };
+		BF62D98F1C975E7500D2BD30 /* AllJoynHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllJoynHelper.h; path = ../../../BridgeCore/AllJoynHelper.h; sourceTree = "<group>"; };
+		BF62D9901C975E7500D2BD30 /* AllJoynProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllJoynProperty.cpp; path = ../../../BridgeCore/AllJoynProperty.cpp; sourceTree = "<group>"; };
+		BF62D9911C975E7500D2BD30 /* AllJoynProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AllJoynProperty.h; path = ../../../BridgeCore/AllJoynProperty.h; sourceTree = "<group>"; };
+		BF62D9921C975E7500D2BD30 /* Bridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bridge.cpp; path = ../../../BridgeCore/Bridge.cpp; sourceTree = "<group>"; };
+		BF62D9931C975E7500D2BD30 /* Bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bridge.h; path = ../../../BridgeCore/Bridge.h; sourceTree = "<group>"; };
+		BF62D9941C975E7500D2BD30 /* BridgeAuthHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BridgeAuthHandler.cpp; path = ../../../BridgeCore/BridgeAuthHandler.cpp; sourceTree = "<group>"; };
+		BF62D9951C975E7500D2BD30 /* BridgeAuthHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeAuthHandler.h; path = ../../../BridgeCore/BridgeAuthHandler.h; sourceTree = "<group>"; };
+		BF62D9961C975E7500D2BD30 /* BridgeCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeCommon.h; path = ../../../BridgeCore/BridgeCommon.h; sourceTree = "<group>"; };
+		BF62D9971C975E7500D2BD30 /* BridgeConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BridgeConfig.cpp; path = ../../../BridgeCore/BridgeConfig.cpp; sourceTree = "<group>"; };
+		BF62D9981C975E7500D2BD30 /* BridgeConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeConfig.h; path = ../../../BridgeCore/BridgeConfig.h; sourceTree = "<group>"; };
+		BF62D9991C975E7500D2BD30 /* BridgeDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BridgeDevice.cpp; path = ../../../BridgeCore/BridgeDevice.cpp; sourceTree = "<group>"; };
+		BF62D99A1C975E7500D2BD30 /* BridgeDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeDevice.h; path = ../../../BridgeCore/BridgeDevice.h; sourceTree = "<group>"; };
+		BF62D99B1C975E7500D2BD30 /* BridgeLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BridgeLog.h; path = ../../../BridgeCore/BridgeLog.h; sourceTree = "<group>"; };
+		BF62D99C1C975E7500D2BD30 /* CommonSal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommonSal.h; path = ../../../BridgeCore/CommonSal.h; sourceTree = "<group>"; };
+		BF62D99D1C975E7500D2BD30 /* CommonUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommonUtils.cpp; path = ../../../BridgeCore/CommonUtils.cpp; sourceTree = "<group>"; };
+		BF62D99E1C975E7500D2BD30 /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommonUtils.h; path = ../../../BridgeCore/CommonUtils.h; sourceTree = "<group>"; };
+		BF62D99F1C975E7500D2BD30 /* ConfigManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfigManager.cpp; path = ../../../BridgeCore/ConfigManager.cpp; sourceTree = "<group>"; };
+		BF62D9A01C975E7500D2BD30 /* ConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigManager.h; path = ../../../BridgeCore/ConfigManager.h; sourceTree = "<group>"; };
+		BF62D9A11C975E7500D2BD30 /* ControlPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlPanel.cpp; path = ../../../BridgeCore/ControlPanel.cpp; sourceTree = "<group>"; };
+		BF62D9A21C975E7500D2BD30 /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlPanel.h; path = ../../../BridgeCore/ControlPanel.h; sourceTree = "<group>"; };
+		BF62D9A31C975E7500D2BD30 /* CspAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CspAdapter.cpp; path = ../../../BridgeCore/CspAdapter.cpp; sourceTree = "<group>"; };
+		BF62D9A41C975E7500D2BD30 /* CspAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CspAdapter.h; path = ../../../BridgeCore/CspAdapter.h; sourceTree = "<group>"; };
+		BF62D9A51C975E7500D2BD30 /* CspBridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CspBridge.cpp; path = ../../../BridgeCore/CspBridge.cpp; sourceTree = "<group>"; };
+		BF62D9A61C975E7500D2BD30 /* CspBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CspBridge.h; path = ../../../BridgeCore/CspBridge.h; sourceTree = "<group>"; };
+		BF62D9A71C975E7500D2BD30 /* DeviceMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeviceMain.cpp; path = ../../../BridgeCore/DeviceMain.cpp; sourceTree = "<group>"; };
+		BF62D9A81C975E7500D2BD30 /* DeviceMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceMain.h; path = ../../../BridgeCore/DeviceMain.h; sourceTree = "<group>"; };
+		BF62D9A91C975E7500D2BD30 /* DeviceMethod.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeviceMethod.cpp; path = ../../../BridgeCore/DeviceMethod.cpp; sourceTree = "<group>"; };
+		BF62D9AA1C975E7500D2BD30 /* DeviceMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceMethod.h; path = ../../../BridgeCore/DeviceMethod.h; sourceTree = "<group>"; };
+		BF62D9AB1C975E7500D2BD30 /* DeviceProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeviceProperty.cpp; path = ../../../BridgeCore/DeviceProperty.cpp; sourceTree = "<group>"; };
+		BF62D9AC1C975E7500D2BD30 /* DeviceProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceProperty.h; path = ../../../BridgeCore/DeviceProperty.h; sourceTree = "<group>"; };
+		BF62D9AD1C975E7500D2BD30 /* DeviceSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeviceSignal.cpp; path = ../../../BridgeCore/DeviceSignal.cpp; sourceTree = "<group>"; };
+		BF62D9AE1C975E7500D2BD30 /* DeviceSignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceSignal.h; path = ../../../BridgeCore/DeviceSignal.h; sourceTree = "<group>"; };
+		BF62D9AF1C975E7500D2BD30 /* DsbServiceNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DsbServiceNames.h; path = ../../../BridgeCore/DsbServiceNames.h; sourceTree = "<group>"; };
+		BF62D9B21C975E7500D2BD30 /* IAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAdapter.h; path = ../../../BridgeCore/IAdapter.h; sourceTree = "<group>"; };
+		BF62D9B31C975E7500D2BD30 /* IControlPanelHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IControlPanelHandler.h; path = ../../../BridgeCore/IControlPanelHandler.h; sourceTree = "<group>"; };
+		BF62D9B51C975E7500D2BD30 /* pch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pch.cpp; path = ../../../BridgeCore/pch.cpp; sourceTree = "<group>"; };
+		BF62D9B61C975E7500D2BD30 /* pch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pch.h; path = ../../../BridgeCore/pch.h; sourceTree = "<group>"; };
+		BF62D9B71C975E7500D2BD30 /* PropertyInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyInterface.cpp; path = ../../../BridgeCore/PropertyInterface.cpp; sourceTree = "<group>"; };
+		BF62D9B81C975E7500D2BD30 /* PropertyInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyInterface.h; path = ../../../BridgeCore/PropertyInterface.h; sourceTree = "<group>"; };
+		BF62D9B91C975E7500D2BD30 /* PropertyValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyValue.h; path = ../../../BridgeCore/PropertyValue.h; sourceTree = "<group>"; };
+		BF62D9BB1C975E7500D2BD30 /* Widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Widget.cpp; path = ../../../BridgeCore/Widget.cpp; sourceTree = "<group>"; };
+		BF62D9BC1C975E7500D2BD30 /* Widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Widget.h; path = ../../../BridgeCore/Widget.h; sourceTree = "<group>"; };
+		BF62D9BD1C975E7500D2BD30 /* WidgetAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetAction.cpp; path = ../../../BridgeCore/WidgetAction.cpp; sourceTree = "<group>"; };
+		BF62D9BE1C975E7500D2BD30 /* WidgetAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetAction.h; path = ../../../BridgeCore/WidgetAction.h; sourceTree = "<group>"; };
+		BF62D9BF1C975E7500D2BD30 /* WidgetConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetConsts.h; path = ../../../BridgeCore/WidgetConsts.h; sourceTree = "<group>"; };
+		BF62D9C01C975E7500D2BD30 /* WidgetContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetContainer.cpp; path = ../../../BridgeCore/WidgetContainer.cpp; sourceTree = "<group>"; };
+		BF62D9C11C975E7500D2BD30 /* WidgetContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetContainer.h; path = ../../../BridgeCore/WidgetContainer.h; sourceTree = "<group>"; };
+		BF62D9C21C975E7500D2BD30 /* WidgetProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetProperty.cpp; path = ../../../BridgeCore/WidgetProperty.cpp; sourceTree = "<group>"; };
+		BF62D9C31C975E7500D2BD30 /* WidgetProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetProperty.h; path = ../../../BridgeCore/WidgetProperty.h; sourceTree = "<group>"; };
+		BF62D9C41C975E7500D2BD30 /* WidgetPropertyLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetPropertyLabel.cpp; path = ../../../BridgeCore/WidgetPropertyLabel.cpp; sourceTree = "<group>"; };
+		BF62D9C51C975E7500D2BD30 /* WidgetPropertyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetPropertyLabel.h; path = ../../../BridgeCore/WidgetPropertyLabel.h; sourceTree = "<group>"; };
+		BF62D9C61C975E7500D2BD30 /* WidgetPropertySwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetPropertySwitch.cpp; path = ../../../BridgeCore/WidgetPropertySwitch.cpp; sourceTree = "<group>"; };
+		BF62D9C71C975E7500D2BD30 /* WidgetPropertySwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetPropertySwitch.h; path = ../../../BridgeCore/WidgetPropertySwitch.h; sourceTree = "<group>"; };
+		BF62D9C81C975E7500D2BD30 /* WidgetPropertyTextBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetPropertyTextBox.cpp; path = ../../../BridgeCore/WidgetPropertyTextBox.cpp; sourceTree = "<group>"; };
+		BF62D9C91C975E7500D2BD30 /* WidgetPropertyTextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetPropertyTextBox.h; path = ../../../BridgeCore/WidgetPropertyTextBox.h; sourceTree = "<group>"; };
+		BF62D9CA1C975E7500D2BD30 /* WidgetSignalHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WidgetSignalHandler.cpp; path = ../../../BridgeCore/WidgetSignalHandler.cpp; sourceTree = "<group>"; };
+		BF62D9CB1C975E7500D2BD30 /* WidgetSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WidgetSignalHandler.h; path = ../../../BridgeCore/WidgetSignalHandler.h; sourceTree = "<group>"; };
+		BF62D9CC1C975E7500D2BD30 /* XmlUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XmlUtil.cpp; path = ../../../BridgeCore/XmlUtil.cpp; sourceTree = "<group>"; };
+		BF62D9CD1C975E7500D2BD30 /* XmlUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlUtil.h; path = ../../../BridgeCore/XmlUtil.h; sourceTree = "<group>"; };
+		BF62D9ED1C97748F00D2BD30 /* FileAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileAccess.h; path = ../../../BridgeCore/FileAccess.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BF62D9671C975E1400D2BD30 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF62D9721C975E1500D2BD30 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF62D9761C975E1500D2BD30 /* libBridge.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BF62D9611C975E1400D2BD30 = {
+			isa = PBXGroup;
+			children = (
+				BF62D96C1C975E1400D2BD30 /* Bridge */,
+				BF62D9791C975E1500D2BD30 /* BridgeTests */,
+				BF62D96B1C975E1400D2BD30 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BF62D96B1C975E1400D2BD30 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BF62D96A1C975E1400D2BD30 /* libBridge.a */,
+				BF62D9751C975E1500D2BD30 /* BridgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BF62D96C1C975E1400D2BD30 /* Bridge */ = {
+			isa = PBXGroup;
+			children = (
+				BF62D9841C975E7500D2BD30 /* AdapterConstants.h */,
+				BF62D9851C975E7500D2BD30 /* AdapterDefinitions.h */,
+				BF62D9861C975E7500D2BD30 /* AdapterDevice.cpp */,
+				BF62D9871C975E7500D2BD30 /* AdapterDevice.h */,
+				BF62D9881C975E7500D2BD30 /* AllJoynAbout.cpp */,
+				BF62D9891C975E7500D2BD30 /* AllJoynAbout.h */,
+				BF62D98A1C975E7500D2BD30 /* AllJoynAboutIcon.cpp */,
+				BF62D98B1C975E7500D2BD30 /* AllJoynAboutIcon.h */,
+				BF62D98C1C975E7500D2BD30 /* AllJoynFileTransfer.cpp */,
+				BF62D98D1C975E7500D2BD30 /* AllJoynFileTransfer.h */,
+				BF62D98E1C975E7500D2BD30 /* AllJoynHelper.cpp */,
+				BF62D98F1C975E7500D2BD30 /* AllJoynHelper.h */,
+				BF62D9901C975E7500D2BD30 /* AllJoynProperty.cpp */,
+				BF62D9911C975E7500D2BD30 /* AllJoynProperty.h */,
+				BF62D9921C975E7500D2BD30 /* Bridge.cpp */,
+				BF62D9931C975E7500D2BD30 /* Bridge.h */,
+				BF62D96D1C975E1400D2BD30 /* Bridge.h */,
+				BF62D96F1C975E1400D2BD30 /* Bridge.m */,
+				BF62D9941C975E7500D2BD30 /* BridgeAuthHandler.cpp */,
+				BF62D9951C975E7500D2BD30 /* BridgeAuthHandler.h */,
+				BF62D9961C975E7500D2BD30 /* BridgeCommon.h */,
+				BF62D9971C975E7500D2BD30 /* BridgeConfig.cpp */,
+				BF62D9981C975E7500D2BD30 /* BridgeConfig.h */,
+				BF62D9991C975E7500D2BD30 /* BridgeDevice.cpp */,
+				BF62D99A1C975E7500D2BD30 /* BridgeDevice.h */,
+				BF62D99B1C975E7500D2BD30 /* BridgeLog.h */,
+				BF62D99C1C975E7500D2BD30 /* CommonSal.h */,
+				BF62D99D1C975E7500D2BD30 /* CommonUtils.cpp */,
+				BF62D99E1C975E7500D2BD30 /* CommonUtils.h */,
+				BF62D99F1C975E7500D2BD30 /* ConfigManager.cpp */,
+				BF62D9A01C975E7500D2BD30 /* ConfigManager.h */,
+				BF62D9A11C975E7500D2BD30 /* ControlPanel.cpp */,
+				BF62D9A21C975E7500D2BD30 /* ControlPanel.h */,
+				BF62D9A31C975E7500D2BD30 /* CspAdapter.cpp */,
+				BF62D9A41C975E7500D2BD30 /* CspAdapter.h */,
+				BF62D9A51C975E7500D2BD30 /* CspBridge.cpp */,
+				BF62D9A61C975E7500D2BD30 /* CspBridge.h */,
+				BF62D9A71C975E7500D2BD30 /* DeviceMain.cpp */,
+				BF62D9A81C975E7500D2BD30 /* DeviceMain.h */,
+				BF62D9A91C975E7500D2BD30 /* DeviceMethod.cpp */,
+				BF62D9AA1C975E7500D2BD30 /* DeviceMethod.h */,
+				BF62D9AB1C975E7500D2BD30 /* DeviceProperty.cpp */,
+				BF62D9AC1C975E7500D2BD30 /* DeviceProperty.h */,
+				BF62D9AD1C975E7500D2BD30 /* DeviceSignal.cpp */,
+				BF62D9AE1C975E7500D2BD30 /* DeviceSignal.h */,
+				BF62D9AF1C975E7500D2BD30 /* DsbServiceNames.h */,
+				BF62D9ED1C97748F00D2BD30 /* FileAccess.h */,
+				BF62D9B21C975E7500D2BD30 /* IAdapter.h */,
+				BF62D9B31C975E7500D2BD30 /* IControlPanelHandler.h */,
+				BF62D9B51C975E7500D2BD30 /* pch.cpp */,
+				BF62D9B61C975E7500D2BD30 /* pch.h */,
+				BF62D9B71C975E7500D2BD30 /* PropertyInterface.cpp */,
+				BF62D9B81C975E7500D2BD30 /* PropertyInterface.h */,
+				BF62D9B91C975E7500D2BD30 /* PropertyValue.h */,
+				BF62D9BB1C975E7500D2BD30 /* Widget.cpp */,
+				BF62D9BC1C975E7500D2BD30 /* Widget.h */,
+				BF62D9BD1C975E7500D2BD30 /* WidgetAction.cpp */,
+				BF62D9BE1C975E7500D2BD30 /* WidgetAction.h */,
+				BF62D9BF1C975E7500D2BD30 /* WidgetConsts.h */,
+				BF62D9C01C975E7500D2BD30 /* WidgetContainer.cpp */,
+				BF62D9C11C975E7500D2BD30 /* WidgetContainer.h */,
+				BF62D9C21C975E7500D2BD30 /* WidgetProperty.cpp */,
+				BF62D9C31C975E7500D2BD30 /* WidgetProperty.h */,
+				BF62D9C41C975E7500D2BD30 /* WidgetPropertyLabel.cpp */,
+				BF62D9C51C975E7500D2BD30 /* WidgetPropertyLabel.h */,
+				BF62D9C61C975E7500D2BD30 /* WidgetPropertySwitch.cpp */,
+				BF62D9C71C975E7500D2BD30 /* WidgetPropertySwitch.h */,
+				BF62D9C81C975E7500D2BD30 /* WidgetPropertyTextBox.cpp */,
+				BF62D9C91C975E7500D2BD30 /* WidgetPropertyTextBox.h */,
+				BF62D9CA1C975E7500D2BD30 /* WidgetSignalHandler.cpp */,
+				BF62D9CB1C975E7500D2BD30 /* WidgetSignalHandler.h */,
+				BF62D9CC1C975E7500D2BD30 /* XmlUtil.cpp */,
+				BF62D9CD1C975E7500D2BD30 /* XmlUtil.h */,
+			);
+			path = Bridge;
+			sourceTree = "<group>";
+		};
+		BF62D9791C975E1500D2BD30 /* BridgeTests */ = {
+			isa = PBXGroup;
+			children = (
+				BF62D97A1C975E1500D2BD30 /* Supporting Files */,
+			);
+			path = BridgeTests;
+			sourceTree = "<group>";
+		};
+		BF62D97A1C975E1500D2BD30 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BF62D97B1C975E1500D2BD30 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BF62D9691C975E1400D2BD30 /* Bridge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF62D97E1C975E1500D2BD30 /* Build configuration list for PBXNativeTarget "Bridge" */;
+			buildPhases = (
+				BF62D9661C975E1400D2BD30 /* Sources */,
+				BF62D9671C975E1400D2BD30 /* Frameworks */,
+				BF62D9681C975E1400D2BD30 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Bridge;
+			productName = Bridge;
+			productReference = BF62D96A1C975E1400D2BD30 /* libBridge.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		BF62D9741C975E1500D2BD30 /* BridgeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF62D9811C975E1500D2BD30 /* Build configuration list for PBXNativeTarget "BridgeTests" */;
+			buildPhases = (
+				BF62D9711C975E1500D2BD30 /* Sources */,
+				BF62D9721C975E1500D2BD30 /* Frameworks */,
+				BF62D9731C975E1500D2BD30 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BF62D9781C975E1500D2BD30 /* PBXTargetDependency */,
+			);
+			name = BridgeTests;
+			productName = BridgeTests;
+			productReference = BF62D9751C975E1500D2BD30 /* BridgeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BF62D9621C975E1400D2BD30 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = Microsoft;
+				TargetAttributes = {
+					BF62D9691C975E1400D2BD30 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					BF62D9741C975E1500D2BD30 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+				};
+			};
+			buildConfigurationList = BF62D9651C975E1400D2BD30 /* Build configuration list for PBXProject "Bridge" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = BF62D9611C975E1400D2BD30;
+			productRefGroup = BF62D96B1C975E1400D2BD30 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BF62D9691C975E1400D2BD30 /* Bridge */,
+				BF62D9741C975E1500D2BD30 /* BridgeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BF62D9731C975E1500D2BD30 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BF62D9661C975E1400D2BD30 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF62D9D71C975E7500D2BD30 /* BridgeDevice.cpp in Sources */,
+				BF62D9EA1C975E7500D2BD30 /* WidgetPropertyTextBox.cpp in Sources */,
+				BF62D9DC1C975E7500D2BD30 /* CspBridge.cpp in Sources */,
+				BF62D9E31C975E7500D2BD30 /* PropertyInterface.cpp in Sources */,
+				BF62D9D41C975E7500D2BD30 /* Bridge.cpp in Sources */,
+				BF62D9E21C975E7500D2BD30 /* pch.cpp in Sources */,
+				BF62D9D31C975E7500D2BD30 /* AllJoynProperty.cpp in Sources */,
+				BF62D9EB1C975E7500D2BD30 /* WidgetSignalHandler.cpp in Sources */,
+				BF62D9D51C975E7500D2BD30 /* BridgeAuthHandler.cpp in Sources */,
+				BF62D9701C975E1400D2BD30 /* Bridge.m in Sources */,
+				BF62D9EC1C975E7500D2BD30 /* XmlUtil.cpp in Sources */,
+				BF62D9DD1C975E7500D2BD30 /* DeviceMain.cpp in Sources */,
+				BF62D9D91C975E7500D2BD30 /* ConfigManager.cpp in Sources */,
+				BF62D9E61C975E7500D2BD30 /* WidgetContainer.cpp in Sources */,
+				BF62D9DE1C975E7500D2BD30 /* DeviceMethod.cpp in Sources */,
+				BF62D9DB1C975E7500D2BD30 /* CspAdapter.cpp in Sources */,
+				BF62D9E51C975E7500D2BD30 /* WidgetAction.cpp in Sources */,
+				BF62D9DF1C975E7500D2BD30 /* DeviceProperty.cpp in Sources */,
+				BF62D9E01C975E7500D2BD30 /* DeviceSignal.cpp in Sources */,
+				BF62D9E81C975E7500D2BD30 /* WidgetPropertyLabel.cpp in Sources */,
+				BF62D9E41C975E7500D2BD30 /* Widget.cpp in Sources */,
+				BF62D9D21C975E7500D2BD30 /* AllJoynHelper.cpp in Sources */,
+				BF62D9D81C975E7500D2BD30 /* CommonUtils.cpp in Sources */,
+				BF62D9CE1C975E7500D2BD30 /* AdapterDevice.cpp in Sources */,
+				BF62D9D01C975E7500D2BD30 /* AllJoynAboutIcon.cpp in Sources */,
+				BF62D9DA1C975E7500D2BD30 /* ControlPanel.cpp in Sources */,
+				BF62D9D11C975E7500D2BD30 /* AllJoynFileTransfer.cpp in Sources */,
+				BF62D9D61C975E7500D2BD30 /* BridgeConfig.cpp in Sources */,
+				BF62D9CF1C975E7500D2BD30 /* AllJoynAbout.cpp in Sources */,
+				BF62D9E71C975E7500D2BD30 /* WidgetProperty.cpp in Sources */,
+				BF62D9E91C975E7500D2BD30 /* WidgetPropertySwitch.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF62D9711C975E1500D2BD30 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BF62D9781C975E1500D2BD30 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BF62D9691C975E1400D2BD30 /* Bridge */;
+			targetProxy = BF62D9771C975E1500D2BD30 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BF62D97C1C975E1500D2BD30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		BF62D97D1C975E1500D2BD30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BF62D97F1C975E1500D2BD30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					QCC_OS_GROUP_POSIX,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../External/AllJoyn/c/inc,
+					../../../../External/boost,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		BF62D9801C975E1500D2BD30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_PREPROCESSOR_DEFINITIONS = QCC_OS_GROUP_POSIX;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../External/AllJoyn/c/inc,
+					../../../../External/boost,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		BF62D9821C975E1500D2BD30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BridgeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BF62D9831C975E1500D2BD30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BridgeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BF62D9651C975E1400D2BD30 /* Build configuration list for PBXProject "Bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF62D97C1C975E1500D2BD30 /* Debug */,
+				BF62D97D1C975E1500D2BD30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF62D97E1C975E1500D2BD30 /* Build configuration list for PBXNativeTarget "Bridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF62D97F1C975E1500D2BD30 /* Debug */,
+				BF62D9801C975E1500D2BD30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF62D9811C975E1500D2BD30 /* Build configuration list for PBXNativeTarget "BridgeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF62D9821C975E1500D2BD30 /* Debug */,
+				BF62D9831C975E1500D2BD30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BF62D9621C975E1400D2BD30 /* Project object */;
+}

@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="fromBridge">
+      <UniqueIdentifier>{0134c617-2edb-43cf-bdd2-a48454837d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fromBridge\Windows">
+      <UniqueIdentifier>{ed8f79d5-89d1-4457-ab8e-8fc66f28f0fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fromBridge\Headers">
+      <UniqueIdentifier>{3cae774c-d438-42aa-a1e6-4b4471b6350e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fromBridge\Source">
+      <UniqueIdentifier>{f98b9e68-5b4f-41e3-a290-2a385d496388}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BridgeUW.cpp" />
+    <ClCompile Include="..\BridgeCore\AdapterDevice.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\AllJoynAbout.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\AllJoynAboutIcon.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\AllJoynFileTransfer.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\AllJoynHelper.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\AllJoynProperty.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\Bridge.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\BridgeAuthHandler.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\BridgeConfig.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\BridgeDevice.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\Windows\BridgeLog.cpp">
+      <Filter>fromBridge\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\CommonUtils.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\ConfigManager.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\ControlPanel.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\CspAdapter.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\CspBridge.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\DeviceMain.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\DeviceMethod.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\DeviceProperty.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\DeviceSignal.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\XmlUtil.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetSignalHandler.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetPropertyTextBox.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetPropertySwitch.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetPropertyLabel.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetProperty.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetContainer.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\WidgetAction.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\Widget.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\FileAccessFactory.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\PropertyInterface.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\pch.cpp">
+      <Filter>fromBridge\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BridgeCore\Windows\WinFileAccess.cpp">
+      <Filter>fromBridge\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\BridgeCore\AdapterConstants.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AdapterDefinitions.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AdapterDevice.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AllJoynAbout.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AllJoynAboutIcon.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AllJoynFileTransfer.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AllJoynHelper.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\AllJoynProperty.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\Bridge.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\BridgeAuthHandler.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\BridgeCommon.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\BridgeConfig.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\BridgeDevice.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\BridgeLog.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\CommonUtils.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\ConfigManager.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\ControlPanel.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\CspAdapter.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\CspBridge.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\DeviceMain.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\DeviceMethod.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\DeviceProperty.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\DeviceSignal.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\FileAccess.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\IAdapter.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\IBridge.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\IControlPanelHandler.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\PropertyInterface.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\PropertyValue.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\Widget.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetAction.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetConsts.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetContainer.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetProperty.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetPropertyLabel.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\XmlUtil.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetSignalHandler.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetPropertyTextBox.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\WidgetPropertySwitch.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\CommonSal.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\pch.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\Windows\WinFileAccess.h">
+      <Filter>fromBridge\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\resource.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BridgeCore\DsbServiceNames.h">
+      <Filter>fromBridge\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

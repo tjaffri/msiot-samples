@@ -1,0 +1,1 @@
+Git: alljoyn branch: '(no branch)' tag: 'v15.09a' (+0 changes) commit ref: 67ac42592077d8b5de09bcb91d54a6333c901d3e

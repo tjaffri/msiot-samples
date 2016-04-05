@@ -1,0 +1,47 @@
+﻿<Window x:Class="DsbTestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DsbTestApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" Margin="10,10,10,10" VerticalAlignment="Stretch" Width="497" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> Device Name:</TextBlock>
+                <TextBox x:Name="deviceName" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> Vendor Name:</TextBlock>
+                <TextBox x:Name="vendor" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> Model Name:</TextBlock>
+                <TextBox x:Name="model" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> JSON Props:</TextBlock>
+                <TextBox x:Name="props" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> JavaScript File:</TextBlock>
+                <TextBox x:Name="javascriptFileName" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> Schema File:</TextBlock>
+                <TextBox x:Name="schemaFileName" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
+                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> JS Modules path:</TextBlock>
+                <TextBox x:Name="modulesPath" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+            <Button Width="100" Click="InitButton_Click"> Initialize DSB </Button>
+            <Button Width="100" Click="AddButton_Click">Add device</Button>
+            <StackPanel Orientation="Horizontal" Margin="2,10,0,0">
+                <TextBox x:Name="msg" HorizontalAlignment="Left" Width="400" Margin="10,0,0,0"></TextBox>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Window>
