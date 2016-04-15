@@ -1,4 +1,4 @@
-package com.opent2t.bridge;
+package com.ot2t.bridge;
 
 public class DeviceInfo {
 	public String name;

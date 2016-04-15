@@ -1,12 +1,23 @@
-package com.opent2t.bridge;
+package com.ot2t.bridge;
+
+import android.util.Log;
 
 public class Bridge {
     private static Bridge s_instance;
-	
-    static {
-        System.loadLibrary("BridgeApi");
-    }
-	
+
+	static {
+		try {
+			System.loadLibrary("c++_shared");
+			System.loadLibrary("alljoyn_c");
+			System.loadLibrary("jxcore");
+			System.loadLibrary("Bridge");
+			System.loadLibrary("ScriptAdapter");
+			System.loadLibrary("BridgeApi");
+		} catch (UnsatisfiedLinkError err) {
+			Log.e("OpenT2T", "Unable to load native dependencies: " + err.getMessage());
+		}
+	}
+
 	public static int initialize() {
         if (s_instance == null) {
             s_instance = new Bridge();

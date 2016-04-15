@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.opent2t.bridge.Bridge;
-import com.opent2t.bridge.DeviceInfo;
+import com.ot2t.bridge.Bridge;
+import com.ot2t.bridge.DeviceInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
