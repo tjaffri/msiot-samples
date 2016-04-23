@@ -15,10 +15,15 @@ model {
 
     android.ndk {
         moduleName = "BridgeApi"
-        ldLibs.addAll(['log'])
+        ldFlags.add("-L" + file("../../../Bridge/ScriptAdapterLibAndroid/libs/armeabi-v7a").absolutePath)
+        ldLibs.addAll(["log", "alljoyn_c", "jxcore", "Bridge", "ScriptAdapter"])
         cppFlags.add("-std=c++14")
         cppFlags.add("-fexceptions")
         cppFlags.add("-frtti")
+        cppFlags.add("-I" + file("../../../External/boost").absolutePath)
+        cppFlags.add("-I" + file("../../../External/AllJoyn/c/inc").absolutePath)
+        cppFlags.add("-I" + file("../../../Bridge/BridgeCore").absolutePath)
+        cppFlags.add("-I" + file("../../../Bridge/ScriptAdapterLib").absolutePath)
         abiFilters.add("armeabi-v7a")
         stl = 'gnustl_shared'
     }

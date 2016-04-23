@@ -2,46 +2,6 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := CAres
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libcares_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := ChromeZlib
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libchrome_zlib_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := HttpParser
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libhttp_parser_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := jxCore
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libjx_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := MozJs
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libmozjs_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := OpenSsl
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libopenssl_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := SqLite
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libsqlite3_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := UV
-LOCAL_SRC_FILES := ../../../External/JxCore/lib/Android/$(TARGET_ARCH_ABI)/libuv_arm.a
-include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
 LOCAL_MODULE := alljoyn_c
 LOCAL_SRC_FILES := ../../../External/AllJoyn/c/lib/Android/liballjoyn_c.so
 include $(PREBUILT_SHARED_LIBRARY)
