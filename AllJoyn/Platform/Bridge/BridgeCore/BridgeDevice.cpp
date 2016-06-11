@@ -43,7 +43,8 @@ BridgeDevice::BridgeDevice()
     m_uniqueIdForInterfaces(FIRST_UNIQUE_ID),
     m_deviceMain(nullptr),
     m_supportCOVSignal(false),
-    m_adapter(nullptr)
+    m_adapter(nullptr),
+    m_pControlPanel(nullptr)
 {
 }
 Bridge::BridgeDevice::~BridgeDevice()

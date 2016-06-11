@@ -21,22 +21,28 @@
 
 namespace BridgeRT
 {
-	public ref class BridgeJs sealed : public IBridgeJs
-	{
-	public:
-		BridgeJs();
+    public ref class BridgeJs sealed : public IBridgeJs
+    {
+    public:
+        BridgeJs();
 
-		virtual int32_t Initialize();
-		virtual void AddDevice(_In_ DeviceInfo ^device, _In_ Platform::String^ baseTypeXml, _In_ Platform::String^ jsScript, _In_ Platform::String^ modulesPath);
-		virtual void Shutdown();
-		event Windows::Foundation::EventHandler<Platform::String^>^ Error;
-		void RaiseEvent(Platform::String^ msg);
+        virtual int32_t Initialize();
+        virtual IAsyncAction^ AddDeviceAsync(
+            _In_ DeviceInfo ^device,
+            _In_ Platform::String^ baseTypeXml,
+            _In_ Platform::String^ jsScript,
+            _In_ Platform::String^ modulesPath);
+        virtual void Shutdown();
+        event EventHandler<Platform::String^>^ Error;
+        void RaiseEvent(Platform::String^ msg);
 
     private:
+        void CheckResult(uint32_t status);
+
         class AdapterError : public AdapterLib::IJsAdapterError
         {
         public:
             void ReportError(_In_ const std::string& msg) override;
         };
-	};
+    };
 }

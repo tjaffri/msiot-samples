@@ -15,20 +15,11 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel;
+using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 using BridgeRT;
 
@@ -42,13 +33,14 @@ namespace UwpTestApp
     public sealed partial class MainPage : Page
     {
         BridgeJs bridge;
+        bool gotError;
 
         public MainPage()
         {
             this.InitializeComponent();
 
             bridge = new BridgeJs();
-
+            bridge.Error += Bridge_Error;
 
             // Set the default values.
             deviceName.Text = "My test device";
@@ -60,6 +52,14 @@ namespace UwpTestApp
             modulesPath.Text = ".";
         }
 
+        private async void Bridge_Error(object sender, string e)
+        {
+            this.gotError = true;
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                msg.Text = e;
+            });
+        }
 
         private void InitButton_Click(object sender, RoutedEventArgs e)
         {
@@ -76,6 +76,7 @@ namespace UwpTestApp
 
         private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            this.gotError = false;
             try
             {
                 DeviceInfo device = new DeviceInfo();
@@ -88,22 +89,20 @@ namespace UwpTestApp
                 string jsFile = javascriptFileName.Text;
                 string modPath = modulesPath.Text;
 
-                // make this async as it could take awhile
-                var s = await Task.Run(() =>
-                {
-                    // Load the schema
-                    string baseXml = File.ReadAllText(schemaFile);
-                    // Load the javascript
-                    string script = File.ReadAllText(jsFile);
+                // Load the schema
+                string baseXml = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(schemaFile));
+                // Load the javascript
+                string script = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(jsFile));
 
-                    bridge.AddDevice(device, baseXml, script, modPath);
-                    return 0;
-                });
+                await bridge.AddDeviceAsync(device, baseXml, script, modPath);
                 msg.Text = "Device added";
             }
             catch (Exception ex)
             {
-                msg.Text = "AddDevice exception: " + ex.Message;
+                if (!this.gotError)
+                {
+                    msg.Text = "AddDevice exception: " + ex.Message;
+                }
             }
         }
     }

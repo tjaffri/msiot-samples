@@ -31,7 +31,13 @@ class IJsAdapter : public Bridge::IAdapter
 public:
     static std::shared_ptr<IJsAdapter> Get();
 
-    virtual void AddDevice(_In_ std::shared_ptr<Bridge::IAdapterDevice>& device, _In_ const std::string& baseTypeXml, _In_ const std::string& jsScript, _In_ const std::string& jsModulesPath) = 0;
+    virtual uint32_t AddDevice(
+        _In_ std::shared_ptr<Bridge::IAdapterDevice> device,
+        _In_ const std::string& baseTypeXml,
+        _In_ const std::string& jsScript,
+        _In_ const std::string& jsModulesPath,
+        _Out_opt_ std::shared_ptr<Bridge::IAdapterAsyncRequest>& requestPtr) = 0;
+
     virtual void SetAdapterError(_In_ std::shared_ptr<IJsAdapterError>& adaptErr) = 0;
 };
 

@@ -7,24 +7,48 @@ function logDeviceState(device) {
 module.exports = {
     device: null,
     initDevice: function (dev) {
-        console.log("Javascript initialized.");
-        this.device = dev;
-        logDeviceState(this.device);
+        console.log("initDevice called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.device = dev;
+                logDeviceState(this.device);
+                console.log("initDevice completed.");
+                resolve();
+            }, 1000);
+        });
     },
 
     turnOn: function () {
-        console.log("turnOn called.");
-        logDeviceState(this.device);
+        console.log("turnOn called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState(this.device);
+                console.log("turnOn completed.");
+                resolve();
+            }, 1000);
+        });
     },
 
     turnOff: function () {
         console.log("turnOff called.");
-        logDeviceState(this.device);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState(this.device);
+                console.log("turnOff completed.");
+                resolve();
+            }, 1000);
+        });
     },
 
     setBrightness: function (brightness) {
-        console.log("setBrightness called with value: " + brightness);
-        logDeviceState(this.device);
+        console.log("setBrightness(" + brightness + ") called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState(this.device);
+                console.log("setBrightness completed.");
+                resolve();
+            }, 1000);
+        });
     }
 
 }

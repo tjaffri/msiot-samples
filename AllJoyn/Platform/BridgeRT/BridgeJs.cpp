@@ -29,66 +29,108 @@ std::shared_ptr<IJsAdapterError> g_adaptErr = nullptr;
 
 namespace BridgeRT
 {
-	// utility to copy device between RT and native
-	std::shared_ptr<Bridge::IAdapterDevice> CopyAdapterDeviceForJS(_In_ DeviceInfo ^device)
-	{
-		Bridge::AdapterDevice* jsDevice = new Bridge::AdapterDevice();
+    // utility to copy device between RT and native
+    std::shared_ptr<Bridge::IAdapterDevice> CopyAdapterDeviceForJS(_In_ DeviceInfo ^device)
+    {
+        Bridge::AdapterDevice* jsDevice = new Bridge::AdapterDevice();
 
-		jsDevice->Name(StringUtils::ToUtf8(device->Name->Data()));
-		jsDevice->Vendor(StringUtils::ToUtf8(device->Vendor->Data()));
-		jsDevice->Model(StringUtils::ToUtf8(device->Model->Data()));
-		jsDevice->Version(StringUtils::ToUtf8(device->Version->Data()));
-		jsDevice->FirmwareVersion(StringUtils::ToUtf8(device->FirmwareVersion->Data()));
-		jsDevice->ID(StringUtils::ToUtf8(device->SerialNumber->Data()));
-		jsDevice->SerialNumber(StringUtils::ToUtf8(device->SerialNumber->Data()));
-		jsDevice->Description(StringUtils::ToUtf8(device->Description->Data()));
-		jsDevice->Props(StringUtils::ToUtf8(device->Props->Data()));
+        jsDevice->Name(StringUtils::ToUtf8(device->Name->Data()));
+        jsDevice->Vendor(StringUtils::ToUtf8(device->Vendor->Data()));
+        jsDevice->Model(StringUtils::ToUtf8(device->Model->Data()));
+        jsDevice->Version(StringUtils::ToUtf8(device->Version->Data()));
+        jsDevice->FirmwareVersion(StringUtils::ToUtf8(device->FirmwareVersion->Data()));
+        jsDevice->ID(StringUtils::ToUtf8(device->SerialNumber->Data()));
+        jsDevice->SerialNumber(StringUtils::ToUtf8(device->SerialNumber->Data()));
+        jsDevice->Description(StringUtils::ToUtf8(device->Description->Data()));
+        jsDevice->Props(StringUtils::ToUtf8(device->Props->Data()));
 
-		return std::shared_ptr<Bridge::IAdapterDevice>(reinterpret_cast<Bridge::IAdapterDevice*>(jsDevice));
-	}
+        return std::shared_ptr<Bridge::IAdapterDevice>(reinterpret_cast<Bridge::IAdapterDevice*>(jsDevice));
+    }
 
-	BridgeJs::BridgeJs()
-	{
-		g_BridgeJs = this;
-	}
+    BridgeJs::BridgeJs()
+    {
+        g_BridgeJs = this;
+    }
 
-	int32_t BridgeJs::Initialize()
-	{
-		std::shared_ptr<IJsAdapter> adapter = IJsAdapter::Get();
+    int32_t BridgeJs::Initialize()
+    {
+        std::shared_ptr<IJsAdapter> adapter = IJsAdapter::Get();
         std::shared_ptr<IBridge> bridge = IBridge::Get();
 
         g_adaptErr = std::make_shared<AdapterError>();
-		adapter->SetAdapterError(g_adaptErr);
+        adapter->SetAdapterError(g_adaptErr);
 
-		bridge->AddAdapter(adapter);
-		bridge->Initialize();
+        bridge->AddAdapter(adapter);
+        bridge->Initialize();
 
-		return S_OK;
-	}
+        return S_OK;
+    }
 
-	void BridgeJs::AddDevice(_In_ DeviceInfo^ device, _In_ Platform::String^ baseTypeXml, _In_ Platform::String^ jsScript, _In_ Platform::String^ modulesPath)
-	{
+    IAsyncAction^ BridgeJs::AddDeviceAsync(
+        _In_ DeviceInfo^ device,
+        _In_ Platform::String^ baseTypeXml,
+        _In_ Platform::String^ jsScript,
+        _In_ Platform::String^ modulesPath)
+    {
         std::shared_ptr<IJsAdapter> adapter = IJsAdapter::Get();
-		std::string script(StringUtils::ToUtf8(jsScript->Data()));
+        std::string script(StringUtils::ToUtf8(jsScript->Data()));
         std::string baseXml(StringUtils::ToUtf8(baseTypeXml->Data()));
         std::string modPath(StringUtils::ToUtf8(modulesPath->Data()));
         std::shared_ptr<IAdapterDevice> mydevice = CopyAdapterDeviceForJS(device);
 
-		return adapter->AddDevice(mydevice, baseXml, script, modPath);
-	}
+        std::shared_ptr<IAdapterAsyncRequest> requestPtr;
+        unsigned int status = adapter->AddDevice(mydevice, baseXml, script, modPath, requestPtr);
 
-	void BridgeJs::Shutdown()
-	{
+        if (status == ERROR_IO_PENDING)
+        {
+            concurrency::task_completion_event<void> completionEvent;
+            requestPtr->Continue([=](uint32_t status) -> uint32_t
+            {
+                completionEvent.set();
+                return status;
+            });
+
+            // Return a task that completes (or throws) after the completion event gets set.
+            auto self = this;
+            return concurrency::create_async([=]()
+            {
+                return concurrency::task<void>(completionEvent).then([=]()
+                {
+                    self->CheckResult(requestPtr->Status());
+                });
+            });
+        }
+        else
+        {
+            this->CheckResult(status);
+            return concurrency::create_async([]() {});
+        }
+    }
+
+    void BridgeJs::CheckResult(uint32_t status)
+    {
+        if (status != ERROR_SUCCESS)
+        {
+            this->RaiseEvent(Platform::StringReference(
+                (L"Adding device failed with status: " + std::to_wstring(status)).c_str()));
+
+            // TODO: Consider converting the status to a more specific HRESULT
+            throw ref new Platform::Exception(E_FAIL);
+        }
+    }
+
+    void BridgeJs::Shutdown()
+    {
         std::shared_ptr<IJsAdapter> adapter = IJsAdapter::Get();
         std::shared_ptr<IBridge> bridge = IBridge::Get();
-		adapter->Shutdown();
-		bridge->Shutdown();
-	}
+        adapter->Shutdown();
+        bridge->Shutdown();
+    }
 
-	void BridgeJs::RaiseEvent(Platform::String^ msg)
-	{
-		Error(this, msg);
-	}
+    void BridgeJs::RaiseEvent(Platform::String^ msg)
+    {
+        Error(this, msg);
+    }
 
     void BridgeJs::AdapterError::ReportError(_In_ const std::string& msg)
     {

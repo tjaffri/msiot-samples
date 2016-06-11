@@ -20,21 +20,22 @@
 #include "AdapterDevice.h"
 #include "ScriptHost.h"
 #include "JsAdapter.h"
+#include "JsAdapterRequest.h"
 
 using namespace Bridge;
 
 namespace AdapterLib
 {
-	std::shared_ptr<JsAdapter> JsAdapter::g_TheOneOnlyInstance = nullptr;
+    std::shared_ptr<JsAdapter> JsAdapter::g_TheOneOnlyInstance = nullptr;
 
-	std::shared_ptr<JsAdapter> JsAdapter::SingleInstance()
-	{
-		if (g_TheOneOnlyInstance == nullptr)
-		{
-			g_TheOneOnlyInstance = std::shared_ptr<JsAdapter>(new JsAdapter());
-		}
-		return g_TheOneOnlyInstance;
-	}
+    std::shared_ptr<JsAdapter> JsAdapter::SingleInstance()
+    {
+        if (g_TheOneOnlyInstance == nullptr)
+        {
+            g_TheOneOnlyInstance = std::shared_ptr<JsAdapter>(new JsAdapter());
+        }
+        return g_TheOneOnlyInstance;
+    }
 
     /*static*/ std::shared_ptr<IJsAdapter> IJsAdapter::Get()
     {
@@ -49,8 +50,8 @@ namespace AdapterLib
         this->adapterName = "Javascript Device System Bridge";
         // the adapter prefix must be something like "com.mycompany" (only alpha num and dots)
         // it is used by the Device System Bridge as root string for all services and interfaces it exposes
-		this->exposedAdapterPrefix = "com.";
-		this->exposedAdapterPrefix += this->vendor.c_str();
+        this->exposedAdapterPrefix = "com.";
+        this->exposedAdapterPrefix += this->vendor.c_str();
         this->exposedApplicationGuid = APPLICATION_GUID;
         this->exposedApplicationName = "Javascript Device System Bridge";
 
@@ -93,35 +94,52 @@ namespace AdapterLib
 
     // Create a new IAdapterDevice for the Alljoyn interface described by the given xml, and associate
     // it with the given JavaScript and initialize the Javascript with the given context object.
-    void JsAdapter::AddDevice(_In_ std::shared_ptr<IAdapterDevice>& device, _In_ const std::string& baseTypeXml, _In_ const std::string& jsScript, _In_ const std::string& jsModulesPath)
+    uint32_t JsAdapter::AddDevice(
+        _In_ std::shared_ptr<IAdapterDevice> device,
+        _In_ const std::string& baseTypeXml,
+        _In_ const std::string& jsScript,
+        _In_ const std::string& jsModulesPath,
+        _Out_opt_ std::shared_ptr<IAdapterAsyncRequest>& requestPtr)
     {
-        try
+        ScriptHost* host = new ScriptHost();
+
+        device->BaseTypeXML(baseTypeXml);
+
+        // Set the host context on the device, required when it processes methods, events etc.
+        device->HostContext(reinterpret_cast<intptr_t>(reinterpret_cast<void*>(host)));
+
+        auto adapterRequest = std::make_shared<JsAdapterRequest>();
+        requestPtr = adapterRequest;
+        host->InitializeHost(device, jsScript, jsModulesPath, [=](uint32_t status)
         {
-            ScriptHost* host = new ScriptHost();
+            if (status == ERROR_SUCCESS)
+            {
+                std::shared_ptr<IAdapter> adapter = std::dynamic_pointer_cast<IAdapter>(g_TheOneOnlyInstance);
+                std::shared_ptr<IBridge> bridge = IBridge::Get();
+                QStatus bridgeStatus = bridge->AddDevice(adapter, device);
+                if (bridgeStatus != ER_OK)
+                {
+                    std::cerr << "JsAdapter could not add device. Bridge returned status: " << bridgeStatus << std::endl;
+                    status = ERROR_GEN_FAILURE;
+                }
+            }
+            else
+            {
+                std::cerr << "JsAdapter could not add device. Initialization returned status: " << status << std::endl;
+            }
 
-            device->BaseTypeXML(baseTypeXml);
-            host->InitializeHost(device.get(), jsScript, jsModulesPath);
+            adapterRequest->SetStatus(status);
+        });
 
-            // Set the host context on the device, reuqired when it processes methods, events etc.
-            device->HostContext(reinterpret_cast<intptr_t>(reinterpret_cast<void*>(host)));
-
-            // TODO: This appears to be leaking abstraction, should only use IBridge
-            std::shared_ptr<IAdapter> adapt(dynamic_cast<IAdapter*>(this));
-            std::shared_ptr<IBridge> bridge = IBridge::Get();
-            bridge->AddDevice(adapt, device);
-        }
-        catch (...)
-        {
-            std::cerr << "JsAdapter could not add device" << std::endl;
-        }
+        return adapterRequest->Status();
     }
 
     _Use_decl_annotations_
     uint32_t
     JsAdapter::EnumDevices(
         ENUM_DEVICES_OPTIONS /*Options*/,
-		AdapterDeviceVector& /*DeviceListPtr*/,
-		std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
+        AdapterDeviceVector& /*DeviceListPtr*/,
+        std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
         )
     {
         return ERROR_SUCCESS;
@@ -131,8 +149,8 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::GetProperty(
-		std::shared_ptr<IAdapterProperty>& /*Property*/,
-		std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
+        std::shared_ptr<IAdapterProperty>& /*Property*/,
+        std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
         )
     {
         return ERROR_SUCCESS;
@@ -142,8 +160,8 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::SetProperty(
-		std::shared_ptr<IAdapterProperty> /*Property*/,
-		std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
+        std::shared_ptr<IAdapterProperty> /*Property*/,
+        std::shared_ptr<IAdapterIoRequest>& /*RequestPtr*/
         )
     {
         return ERROR_SUCCESS;
@@ -153,10 +171,10 @@ namespace AdapterLib
     uint32_t
     JsAdapter::GetPropertyValue(
         _In_ std::shared_ptr<IAdapterDevice> device,
-		std::shared_ptr<IAdapterProperty> Property,
-		std::string AttributeName,
-		std::shared_ptr<IAdapterValue>& ValuePtr,
-		std::shared_ptr<IAdapterIoRequest>& RequestPtr
+        std::shared_ptr<IAdapterProperty> Property,
+        std::string AttributeName,
+        std::shared_ptr<IAdapterValue>& ValuePtr,
+        std::shared_ptr<IAdapterIoRequest>& RequestPtr
         )
     {
         uint32_t status = ERROR_SUCCESS;
@@ -174,44 +192,48 @@ namespace AdapterLib
             return static_cast<uint32_t>(ER_BAD_ARG_1);
         }
 
-        try
+        // Run the script to get that property. Script function is "getPROPNAME" where PROPNAME is the name of the property
+        // e.g. getBrightness
+
+        AdapterValueVector paramsIn;
+        std::string name("get");
+        name += tempProperty->Name();
+        ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
+
+        auto adapterRequest = std::make_shared<JsAdapterRequest>();
+        std::shared_ptr<IAdapterValue> resultValue = ValuePtr;
+        RequestPtr = adapterRequest;
+        host->CallScriptFunction(name, paramsIn, false, [=](uint32_t status, AdapterValueVector outParams)
         {
-            // Run the script to get that property. Script function is "getPROPNAME" where PROPNAME is the name of the property
-            // e.g. getBrightness
-
-            AdapterValueVector paramsIn;
-            AdapterValueVector paramsOut;
-            std::string name("get");
-            name += tempProperty->Name();
-            ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
-
-            host->CallScriptFunction(name, paramsIn, paramsOut);
-            if (paramsOut.size() > 0)
+            if (status == ERROR_SUCCESS)
             {
-                // Set ValuePtr to the result value
-                ValuePtr = paramsOut.at(0);
+                if (outParams.size() > 0)
+                {
+                    *resultValue = *outParams.at(0);
+                }
+                else
+                {
+                    status = ERROR_GEN_FAILURE;
+                }
             }
             else
             {
-                status = static_cast<uint32_t>(ER_FAIL);
+                std::cerr << "GetPropertyValue failed on adapter" << std::endl;
             }
-        }
-        catch (...)
-        {
-            std::cerr << "GetPropertyValue failed on adapter" << std::endl;
-            status = static_cast<uint32_t>(ER_FAIL);
-        }
 
-        return status;
+            adapterRequest->SetStatus(status);
+        });
+
+        return adapterRequest->Status();
     }
 
     _Use_decl_annotations_
     uint32_t
     JsAdapter::SetPropertyValue(
-		std::shared_ptr<IAdapterDevice> device,
-		std::shared_ptr<IAdapterProperty> Property,
-		std::shared_ptr<IAdapterValue> Value,
-		std::shared_ptr<IAdapterIoRequest>& RequestPtr
+        std::shared_ptr<IAdapterDevice> device,
+        std::shared_ptr<IAdapterProperty> Property,
+        std::shared_ptr<IAdapterValue> Value,
+        std::shared_ptr<IAdapterIoRequest>& RequestPtr
         )
     {
         uint32_t status = ERROR_SUCCESS;
@@ -241,64 +263,70 @@ namespace AdapterLib
             }
         }
 
-        try
+        // Run the script to get that property. Script function is "setPROPNAME" where PROPNAME is the name of the property
+        // e.g. getBrightness
+
+        AdapterValueVector paramsIn;
+        AdapterValueVector paramsOut;
+        std::string name("set");
+        name += tempProperty->Name();
+        ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
+        std::shared_ptr<IAdapterValue> sharedVal(dynamic_cast<IAdapterValue*>(tempValue));
+        paramsIn.push_back(sharedVal);
+
+        auto adapterRequest = std::make_shared<JsAdapterRequest>();
+        RequestPtr = adapterRequest;
+        host->CallScriptFunction(name, paramsIn, false, [=](uint32_t status, AdapterValueVector outParams)
         {
-            // Run the script to get that property. Script function is "setPROPNAME" where PROPNAME is the name of the property
-            // e.g. getBrightness
+            if (status != ERROR_SUCCESS)
+            {
+                std::cerr << "GetPropertyValue failed on adapter" << std::endl;
+            }
 
-            AdapterValueVector paramsIn;
-            AdapterValueVector paramsOut;
-            std::string name("set");
-            name += tempProperty->Name();
-            ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
-            std::shared_ptr<IAdapterValue> sharedVal(dynamic_cast<IAdapterValue*>(tempValue));
-            paramsIn.push_back(sharedVal);
+            adapterRequest->SetStatus(status);
+        });
 
-            host->CallScriptFunction(name, paramsIn, paramsOut);
-            status = ERROR_SUCCESS;
-        }
-        catch (...)
-        {
-            std::cerr << "GetPropertyValue failed on adapter" << std::endl;
-            status = static_cast<uint32_t>(ER_FAIL);
-        }
-
-        return status;
+        return adapterRequest->Status();
     }
 
     _Use_decl_annotations_
     uint32_t
     JsAdapter::CallMethod(
-		std::shared_ptr<IAdapterDevice> device,
-		std::shared_ptr<IAdapterMethod>& method,
-		std::shared_ptr<IAdapterIoRequest>& /*requestPtr*/
+        std::shared_ptr<IAdapterDevice> device,
+        std::shared_ptr<IAdapterMethod>& method,
+        std::shared_ptr<IAdapterIoRequest>& requestPtr
         )
     {
         uint32_t status = 0;
 
         // Call the script function
-        try
-        {
-            ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
+        ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
 
-            host->CallScriptFunction(method->Name(), method->InputParams(), method->OutputParams());
-            status = ERROR_SUCCESS;
-        }
-        catch (...)
+        auto adapterRequest = std::make_shared<JsAdapterRequest>();
+        requestPtr = adapterRequest;
+        host->CallScriptFunction(method->Name(), method->InputParams(), false, [=](uint32_t status, AdapterValueVector outParams)
         {
-            std::cerr << "CallMethod failed on adapter" << std::endl;
-            status = static_cast<uint32_t>(ER_FAIL);
-        }
+            if (status == ERROR_SUCCESS)
+            {
+                method->OutputParams() = outParams;
+            }
+            else
+            {
+                std::cerr << "CallMethod failed on adapter" << std::endl;
+            }
 
-        return status;
+            adapterRequest->SetStatus(status);
+        });
+
+        return adapterRequest->Status();
     }
 
     _Use_decl_annotations_
     uint32_t
     JsAdapter::RegisterSignalListener(
-		std::shared_ptr<IAdapterSignal> Signal,
-		std::shared_ptr<IAdapterSignalListener> Listener,
-		intptr_t ListenerContext
+        std::shared_ptr<IAdapterSignal> Signal,
+        std::shared_ptr<IAdapterSignalListener> Listener,
+        intptr_t ListenerContext
         )
     {
         if (Signal == nullptr || Listener == nullptr)
@@ -321,8 +349,8 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::UnregisterSignalListener(
-		std::shared_ptr<IAdapterSignal> /*Signal*/,
-		std::shared_ptr<IAdapterSignalListener> /*Listener*/
+        std::shared_ptr<IAdapterSignal> /*Signal*/,
+        std::shared_ptr<IAdapterSignalListener> /*Listener*/
         )
     {
         return ERROR_SUCCESS;
@@ -331,7 +359,7 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::NotifySignalListener(
-		std::shared_ptr<IAdapterSignal> signal
+        std::shared_ptr<IAdapterSignal> signal
         )
     {
         if (signal == nullptr)
@@ -350,9 +378,9 @@ namespace AdapterLib
         for (auto iter = handlers.begin(); iter != handlers.end(); ++iter)
         {
             IAdapterSignalListener* listener = iter->second.Listener.get();
-			intptr_t listenerContext = iter->second.Context;
-			std::shared_ptr<IAdapter> adapt(dynamic_cast<IAdapter*>(this));
-			listener->AdapterSignalHandler(adapt, signal, listenerContext);
+            intptr_t listenerContext = iter->second.Context;
+            std::shared_ptr<IAdapter> adapt(dynamic_cast<IAdapter*>(this));
+            listener->AdapterSignalHandler(adapt, signal, listenerContext);
         }
 
         return ERROR_SUCCESS;
@@ -361,7 +389,7 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::NotifyDeviceArrival(
-		std::shared_ptr<IAdapterDevice> Device
+        std::shared_ptr<IAdapterDevice> Device
         )
     {
         if (Device == nullptr)
@@ -369,7 +397,7 @@ namespace AdapterLib
             return static_cast<uint32_t>(ER_BAD_ARG_1);
         }
 
-		std::shared_ptr<IAdapterSignal> deviceArrivalSignal = this->signals.at(DEVICE_ARRIVAL_SIGNAL_INDEX);
+        std::shared_ptr<IAdapterSignal> deviceArrivalSignal = this->signals.at(DEVICE_ARRIVAL_SIGNAL_INDEX);
         deviceArrivalSignal->Params().at(DEVICE_ARRIVAL_SIGNAL_PARAM_INDEX)->Data() = Device;
         this->NotifySignalListener(deviceArrivalSignal);
 
@@ -379,7 +407,7 @@ namespace AdapterLib
     _Use_decl_annotations_
     uint32_t
     JsAdapter::NotifyDeviceRemoval(
-		std::shared_ptr<IAdapterDevice> Device
+        std::shared_ptr<IAdapterDevice> Device
         )
     {
         if (Device == nullptr)
@@ -387,7 +415,7 @@ namespace AdapterLib
             return static_cast<uint32_t>(ER_BAD_ARG_1);
         }
 
-		std::shared_ptr<IAdapterSignal> deviceRemovalSignal = this->signals.at(DEVICE_REMOVAL_SIGNAL_INDEX);
+        std::shared_ptr<IAdapterSignal> deviceRemovalSignal = this->signals.at(DEVICE_REMOVAL_SIGNAL_INDEX);
         deviceRemovalSignal->Params().at(DEVICE_REMOVAL_SIGNAL_PARAM_INDEX)->Data() = Device;
         this->NotifySignalListener(deviceRemovalSignal);
 
@@ -400,14 +428,14 @@ namespace AdapterLib
         try
         {
             // Device Arrival Signal
-			std::shared_ptr<AdapterSignal> deviceArrivalSignal(new AdapterSignal(Constants::DEVICE_ARRIVAL_SIGNAL()));
-			std::shared_ptr<IAdapterValue> arrivalValue(new AdapterValue(Constants::DEVICE_ARRIVAL__DEVICE_HANDLE(), nullptr));
+            std::shared_ptr<AdapterSignal> deviceArrivalSignal(new AdapterSignal(Constants::DEVICE_ARRIVAL_SIGNAL()));
+            std::shared_ptr<IAdapterValue> arrivalValue(new AdapterValue(Constants::DEVICE_ARRIVAL__DEVICE_HANDLE(), nullptr));
             deviceArrivalSignal->AddParameter(arrivalValue);
 
             // Device Removal Signal
-			std::shared_ptr<AdapterSignal> deviceRemovalSignal(new AdapterSignal(Constants::DEVICE_REMOVAL_SIGNAL()));
-			std::shared_ptr<IAdapterValue> removalValue(new AdapterValue(Constants::DEVICE_REMOVAL__DEVICE_HANDLE(), nullptr));
-			deviceRemovalSignal->AddParameter(removalValue);
+            std::shared_ptr<AdapterSignal> deviceRemovalSignal(new AdapterSignal(Constants::DEVICE_REMOVAL_SIGNAL()));
+            std::shared_ptr<IAdapterValue> removalValue(new AdapterValue(Constants::DEVICE_REMOVAL__DEVICE_HANDLE(), nullptr));
+            deviceRemovalSignal->AddParameter(removalValue);
 
             // Add Signals to Adapter Signals
             this->signals.push_back(deviceArrivalSignal);
@@ -465,10 +493,10 @@ namespace AdapterLib
     //    return deviceVector;
     //}
 
-	void JsAdapter::SetAdapterError(std::shared_ptr<IJsAdapterError>& adaptErr)
-	{
-		this->adapterError = adaptErr;
-	}
+    void JsAdapter::SetAdapterError(std::shared_ptr<IJsAdapterError>& adaptErr)
+    {
+        this->adapterError = adaptErr;
+    }
 
 } // namespace AdapterLib
 

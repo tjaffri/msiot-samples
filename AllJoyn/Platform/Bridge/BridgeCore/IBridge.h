@@ -31,6 +31,6 @@ namespace Bridge
         virtual QStatus Initialize() = 0;
         virtual QStatus Shutdown() = 0;
         virtual void AddAdapter(_In_ std::shared_ptr<IAdapter> adapter) = 0;
-        virtual void AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device) = 0;
+        virtual QStatus AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device) = 0;
     };
 }

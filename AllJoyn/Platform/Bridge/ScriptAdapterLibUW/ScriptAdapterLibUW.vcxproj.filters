@@ -17,6 +17,9 @@
     <ClCompile Include="..\ScriptAdapterLib\JsAdapter.cpp">
       <Filter>AdapterFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\ScriptAdapterLib\JsAdapterRequest.cpp">
+      <Filter>AdapterFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScriptAdapterLibUW.h" />
@@ -32,6 +35,9 @@
       <Filter>AdapterFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\ScriptAdapterLib\JsAdapter.h">
+      <Filter>AdapterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ScriptAdapterLib\JsAdapterRequest.h">
       <Filter>AdapterFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\ScriptAdapterLib\ScriptHost.h">

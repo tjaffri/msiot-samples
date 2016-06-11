@@ -205,6 +205,7 @@
     <ClInclude Include="..\ScriptAdapterLib\Deps\inc\jx_result.h" />
     <ClInclude Include="..\ScriptAdapterLib\IJsAdapter.h" />
     <ClInclude Include="..\ScriptAdapterLib\JsAdapter.h" />
+    <ClInclude Include="..\ScriptAdapterLib\JsAdapterRequest.h" />
     <ClInclude Include="..\ScriptAdapterLib\ScriptHost.h" />
     <ClInclude Include="..\ScriptAdapterLib\WorkItemDispatcher.h" />
     <ClInclude Include="ScriptAdapterLibUW.h" />
@@ -213,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ScriptAdapterLib\JsAdapter.cpp" />
+    <ClCompile Include="..\ScriptAdapterLib\JsAdapterRequest.cpp" />
     <ClCompile Include="ScriptAdapterLibUW.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

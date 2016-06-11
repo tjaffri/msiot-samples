@@ -82,14 +82,14 @@ namespace DsbTestApp
                 string modPath = modulesPath.Text;
 
                 // make this async as it could take awhile
-                var s = await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     // Load the schema
                     string baseXml = System.IO.File.ReadAllText(schemaFile);
                     // Load the javascript
                     string script = System.IO.File.ReadAllText(jsFile);
 
-                    this.bridge.AddDevice(device, baseXml, script, modPath);
+                    await this.bridge.AddDeviceAsync(device, baseXml, script, modPath);
                     return 0;
                 });
                 msg.Text = "Device added";
