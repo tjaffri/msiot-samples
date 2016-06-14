@@ -33,18 +33,20 @@ namespace ScriptHostConstants
     const char Description[] = "description";
     const char This[] = "This";
     const char Then[] = "then";
+    const char MainModule[] = "mainModule";
+    const char Exports[] = "exports";
     const char ContextName[] = "_adapterDeviceCtx";
 };
 
 class ScriptHost
 {
 public:
-    ScriptHost() 
+    ScriptHost()
     {
         JX_SetNull(&_deviceObject);
     }
 
-    ~ScriptHost() 
+    ~ScriptHost()
     {
         _dispatcher.DispatchAndWait([&]()
         {
@@ -82,7 +84,10 @@ public:
             JXValue result;
             std::vector<JXValue> params;
             params.emplace_back(_deviceObject);
-            if (InternalCallScriptFunction(&result, ScriptHostConstants::InitializationFunctionName, params))
+
+            uint32_t status = InternalCallScriptFunction(
+                &result, ScriptHostConstants::InitializationFunctionName, params);
+            if (status == ERROR_SUCCESS)
             {
                 GetAsyncJxResult(&result,
                     [=](bool success, JXResult* asyncResult)
@@ -92,28 +97,152 @@ public:
             }
             else
             {
-                callback(ERROR_GEN_FAILURE);
+                callback(status);
             }
 
             JX_Free(&result);
         });
     }
 
-    // Call a global JavaScript function, and get the result, converting input and output parameters
-    // to/from JXValue and PropertyValue.
-    // NOTE that due to the way JxCore handles global scope, global functions
-    // should be added to the "global" object e.g.
-    //          var myFunc = function () { ...... }
-    //          globals.myFunc = myFunc;
-    // This dispatches the call to the JxCore instance and returns status and results asynchronously via the callback.
-    // In future, this can be moved to return results asynchronously.
-    // The "insertDeviceObject" parameter, if true, adds the "device" object as the first parameter. The device object is the projected 
+    // Call a JavaScript property getter on the device module, and convert the result from JXValue to IAdapterValue.
+    // Device properties must be exported from the node module.
+    // This dispatches the call to the JxCore instance and returns status asynchronously via the callback.
+    void InvokePropertyGetter(
+        const std::string& name,
+        std::shared_ptr<Bridge::IAdapterValue> outParam,
+        std::function<void(uint32_t)> callback)
+    {
+        _dispatcher.Dispatch([=]()
+        {
+            JXValue exports;
+            GetExportsObject(&exports);
+
+            JXValue prop;
+            JX_GetNamedProperty(&exports, name.c_str(), &prop);
+            if (!JX_IsUndefined(&prop))
+            {
+                // An actual property was found. Get the value directly.
+                ConvertJxResultToOutParam(&prop, outParam);
+                callback(ERROR_SUCCESS);
+            }
+            else
+            {
+                // Check for a getProperty() method that implements the property, with appropriate casing.
+                std::locale loc;
+                std::string methodName = std::string("get") + std::toupper(name[0], loc) + name.substr(1);
+
+                JX_GetNamedProperty(&exports, methodName.c_str(), &prop);
+                if (JX_IsFunction(&prop))
+                {
+                    JXValue result;
+                    bool completed = JX_CallFunction(&prop, nullptr, 0, &result);
+                    if (completed)
+                    {
+                        GetAsyncJxResult(&result, [=](bool success, JXResult* asyncResult)
+                        {
+                            if (success)
+                            {
+                                ConvertJxResultToOutParam(asyncResult, outParam);
+                                callback(ERROR_SUCCESS);
+                            }
+                            else
+                            {
+                                callback(ERROR_GEN_FAILURE);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        callback(ERROR_GEN_FAILURE);
+                    }
+
+                    JX_Free(&result);
+                }
+                else
+                {
+                    callback(ERROR_NOT_FOUND);
+                }
+            }
+
+            JX_Free(&prop);
+            JX_Free(&exports);
+        });
+    }
+
+    // Call a JavaScript property setter on the device module, converting the value from IAdapterValue to JXValue.
+    // Device properties must be exported from the node module.
+    // This dispatches the call to the JxCore instance and returns status asynchronously via the callback.
+    void InvokePropertySetter(
+        const std::string& name,
+        const std::shared_ptr<Bridge::IAdapterValue>& inParam,
+        std::function<void(uint32_t)> callback)
+    {
+        _dispatcher.Dispatch([=]()
+        {
+            // Convert the input parameter
+            std::vector<JXValue> jxInputParams;
+            Bridge::AdapterValueVector inParams(1);
+            inParams[0] = inParam;
+            ConvertPropertyValuesToJxValues(inParams, jxInputParams);
+
+            JXValue exports;
+            GetExportsObject(&exports);
+
+            JXValue prop;
+            JX_GetNamedProperty(&exports, name.c_str(), &prop);
+            if (!JX_IsUndefined(&prop))
+            {
+                // An actual property was found. Set the value directly.
+                JX_SetNamedProperty(&exports, name.c_str(), &jxInputParams[0]);
+                callback(ERROR_SUCCESS);
+            }
+            else
+            {
+                // Check for a setProperty() method that implements the property, with appropriate casing.
+                std::locale loc;
+                std::string methodName = std::string("set") + std::toupper(name[0], loc) + name.substr(1);
+
+                JX_GetNamedProperty(&exports, methodName.c_str(), &prop);
+                if (JX_IsFunction(&prop))
+                {
+                    JXValue result;
+                    bool completed = JX_CallFunction(&prop, jxInputParams.data(), 1, &result);
+                    if (completed)
+                    {
+                        GetAsyncJxResult(&result, [=](bool success, JXResult* asyncResult)
+                        {
+                            callback(success ? ERROR_SUCCESS : ERROR_GEN_FAILURE);
+                        });
+                    }
+                    else
+                    {
+                        callback(ERROR_GEN_FAILURE);
+                    }
+
+                    JX_Free(&result);
+                }
+                else
+                {
+                    callback(ERROR_NOT_FOUND);
+                }
+            }
+
+            JX_Free(&prop);
+            JX_Free(&exports);
+        });
+    }
+
+    // Call a JavaScript method on the device module, and get the result, converting input and output parameters
+    // to/from JXValue and PropertyValue. Device methods must be exported from the device node module.
+    // This dispatches the call to the JxCore instance and returns status asynchronously via the callback.
+    // The "insertDeviceObject" parameter, if true, adds the "device" object as the first parameter. The device object is the projected
     // version of the IAdapterDevice used to start this script host instance.
-    void CallScriptFunction(
+    void InvokeMethod(
         const std::string& name,
         const Bridge::AdapterValueVector& inParams,
+        std::shared_ptr<Bridge::IAdapterValue> outParam,
         bool insertDeviceObject,
-        std::function<void(uint32_t,Bridge::AdapterValueVector&)> callback)
+        std::function<void(uint32_t)> callback)
     {
         _dispatcher.Dispatch([=]()
         {
@@ -126,29 +255,28 @@ public:
             {
                 jxInputParams.insert(jxInputParams.begin(), _deviceObject);
             }
-            
+
             // Call the script function
             JXValue result;
-            if (InternalCallScriptFunction(&result, name, jxInputParams))
+            uint32_t status = InternalCallScriptFunction(&result, name, jxInputParams);
+            if (status == ERROR_SUCCESS)
             {
-                GetAsyncJxResult(&result,
-                    [=](bool success, JXResult* asyncResult)
+                GetAsyncJxResult(&result, [=](bool success, JXResult* asyncResult)
+                {
+                    if (success)
                     {
-                        if (success)
-                        {
-                            Bridge::AdapterValueVector outParams;
-                            ConvertJxResultToOutParam(asyncResult, outParams);
-                            callback(ERROR_SUCCESS, outParams);
-                        }
-                        else
-                        {
-                            callback(ERROR_GEN_FAILURE, Bridge::AdapterValueVector());
-                        }
-                    });
+                        ConvertJxResultToOutParam(asyncResult, outParam);
+                        callback(ERROR_SUCCESS);
+                    }
+                    else
+                    {
+                        callback(ERROR_GEN_FAILURE);
+                    }
+                });
             }
             else
             {
-                callback(ERROR_GEN_FAILURE, Bridge::AdapterValueVector());
+                callback(status);
             }
 
             JX_Free(&result);
@@ -210,59 +338,56 @@ public:
         }
     }
 
-    static void ConvertJxResultToOutParam(JXValue* result, Bridge::AdapterValueVector& valuesOut)
+    static void ConvertJxResultToOutParam(JXValue* result, std::shared_ptr<Bridge::IAdapterValue> valueOut)
     {
-        Bridge::PropertyValue value = nullptr;
-        
-        for (auto& valueOut : valuesOut)
+        if (valueOut == nullptr)
         {
-            if (valueOut != nullptr)
-            {
-                Bridge::PropertyValue ipv = (valueOut.get())->Data();
-                {
-                    switch (ipv.Type())
-                    {
-                    case Bridge::PropertyType::Boolean:
-                        value = JX_GetBoolean(result);
-                        break;
-                    case Bridge::PropertyType::UInt8:
-                        value = (uint8_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::Int16:
-                        value = (int16_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::Int32:
-                        value = (int32_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::Int64:
-                        // Lossy conversion
-                        value = (int64_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::UInt16:
-                        value = (uint16_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::UInt32:
-                        value = (uint32_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::UInt64:
-                        // Lossy conversion
-                        value = (uint64_t)JX_GetInt32(result);
-                        break;
-                    case Bridge::PropertyType::Double:
-                        value = JX_GetDouble(result);
-                        break;
-                    case Bridge::PropertyType::String:
-                        value = std::move(std::string(JX_GetString(result)));
-                        break;
-                    default:
-                        value = std::move(std::string("Not implemented: Cannot convert JX data type back to PropertyValue"));
-                        break;
-                    }
-
-                    valueOut->Data() = value;
-                }
-            }
+            // The caller is ignoring the return value.
+            return;
         }
+
+        Bridge::PropertyValue value = nullptr;
+        Bridge::PropertyValue ipv = valueOut->Data();
+        switch (ipv.Type())
+        {
+        case Bridge::PropertyType::Boolean:
+            value = JX_GetBoolean(result);
+            break;
+        case Bridge::PropertyType::UInt8:
+            value = (uint8_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::Int16:
+            value = (int16_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::Int32:
+            value = (int32_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::Int64:
+            // Lossy conversion
+            value = (int64_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::UInt16:
+            value = (uint16_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::UInt32:
+            value = (uint32_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::UInt64:
+            // Lossy conversion
+            value = (uint64_t)JX_GetInt32(result);
+            break;
+        case Bridge::PropertyType::Double:
+            value = JX_GetDouble(result);
+            break;
+        case Bridge::PropertyType::String:
+            value = std::move(std::string(JX_GetString(result)));
+            break;
+        default:
+            value = std::move(std::string("Not implemented: Cannot convert JX data type back to PropertyValue"));
+            break;
+        }
+
+        valueOut->Data() = value;
     }
 
     void GetAsyncJxResult(
@@ -382,16 +507,25 @@ public:
 
 private:
 
-    bool InternalCallScriptFunction(JXValue* result, const std::string& name, std::vector<JXValue>& params)
+    uint32_t InternalCallScriptFunction(JXValue* result, const std::string& name, std::vector<JXValue>& params)
     {
-        JXValue global;
-        JXValue func;
-        JX_GetGlobalObject(&global);
+        JXValue exports;
+        GetExportsObject(&exports);
 
-        JX_GetNamedProperty(&global, name.c_str(), &func);
-        bool completed = JX_CallFunction(&func, params.data(), (const int) params.size(), result);
-        JX_Loop();
-        return completed;
+        JXValue func;
+        JX_GetNamedProperty(&exports, name.c_str(), &func);
+        if (JX_IsFunction(&func))
+        {
+            bool completed = JX_CallFunction(&func, params.data(), (const int)params.size(), result);
+            JX_Loop();
+            JX_Free(&func);
+            return completed ? ERROR_SUCCESS : ERROR_GEN_FAILURE;
+        }
+        else
+        {
+            JX_Free(&func);
+            return ERROR_NOT_FOUND;
+        }
     }
 
     void SetStringProperty(JXValue* obj, const std::string& name, const std::string& value)
@@ -446,6 +580,27 @@ private:
         std::string ctxString = std::to_string(reinterpret_cast<uintptr_t>(pDevice));
         JX_SetString(&ctx, ctxString.c_str(), (const uint32_t)ctxString.length());
         JX_SetNamedProperty(&_deviceObject, ScriptHostConstants::ContextName, &ctx);
+    }
+
+    // Get the object that contains the script's exported properties and methods.
+    static void GetExportsObject(JXValue* exports)
+    {
+        JXValue process;
+        JX_GetProcessObject(&process);
+
+        JXValue module;
+        JX_GetNamedProperty(&process, ScriptHostConstants::MainModule, &module);
+        JX_Free(&process);
+
+        JX_GetNamedProperty(&module, ScriptHostConstants::Exports, exports);
+        JX_Free(&module);
+
+        if (!JX_IsObject(exports))
+        {
+            // Fallback to the global object.
+            JX_Free(exports);
+            JX_GetGlobalObject(exports);
+        }
     }
 
     static void ReportResultCallback(JXValue* argv, int argc)

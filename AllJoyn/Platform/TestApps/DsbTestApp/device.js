@@ -1,36 +1,44 @@
-function logDeviceState(device) {
+
+var device = null;
+var brightness = 0;
+
+function logDeviceState() {
     console.log("  device.name          : " + device.name);
     console.log("  device.props         : " + device.props);
 }
 
 
 module.exports = {
-    device: null,
     initDevice: function (dev) {
         console.log("Javascript initialized.");
-        this.device = dev;
-        logDeviceState(this.device);
+        device = dev;
+        logDeviceState();
     },
 
     turnOn: function () {
         console.log("turnOn called.");
-        logDeviceState(this.device);
+        brightness = 100;
+        logDeviceState();
     },
 
     turnOff: function () {
         console.log("turnOff called.");
-        logDeviceState(this.device);
-    },
-
-    setBrightness: function (brightness) {
-        console.log("setBrightness called with value: " + brightness);
-        logDeviceState(this.device);
+        brightness = 0;
+        logDeviceState();
     }
 
 }
 
-// globals for JxCore host
-global.initDevice = module.exports.initDevice;
-global.turnOn = module.exports.turnOn;
-global.turnOff = module.exports.turnOff;
-global.setBrightness = module.exports.setBrightness;
+Object.defineProperty(module.exports, "brightness", {
+    get: function () {
+        console.log("getting brightness property: " + brightness);
+        logDeviceState();
+        return brightness;
+    },
+    set: function (value) {
+        console.log("setting brightness property to: " + value);
+        brightness = value;
+        logDeviceState();
+    }
+});
+
