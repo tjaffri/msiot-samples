@@ -92,10 +92,6 @@ namespace BridgeNet
             {
                 auto& request = *_requestPtr;
                 status = request->Wait(INFINITE);
-                if (status == ERROR_SUCCESS)
-                {
-                    status = request->Status();
-                }
 
                 delete[] _requestPtr;
                 _requestPtr = nullptr;

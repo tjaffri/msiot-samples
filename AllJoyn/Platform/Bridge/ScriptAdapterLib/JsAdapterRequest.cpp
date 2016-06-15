@@ -76,9 +76,7 @@ namespace AdapterLib
         bool completed = _condition.wait_for(
             lock, std::chrono::milliseconds(timeoutMsec), [&]() { return _status != ERROR_IO_PENDING; });
 
-        // Note after receiving an ERROR_SUCCESS result from a wait, callers must still check Status()
-        // to get the actual status of the overall request.
-        return completed ? ERROR_SUCCESS : ERROR_TIMEOUT;
+        return completed ? _status : ERROR_TIMEOUT;
     }
 
     uint32_t JsAdapterRequest::Cancel()

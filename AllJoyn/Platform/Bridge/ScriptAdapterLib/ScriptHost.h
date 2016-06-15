@@ -174,7 +174,7 @@ public:
     // This dispatches the call to the JxCore instance and returns status asynchronously via the callback.
     void InvokePropertySetter(
         const std::string& name,
-        const std::shared_ptr<Bridge::IAdapterValue>& inParam,
+        const std::shared_ptr<Bridge::IAdapterValue> inParam,
         std::function<void(uint32_t)> callback)
     {
         _dispatcher.Dispatch([=]()

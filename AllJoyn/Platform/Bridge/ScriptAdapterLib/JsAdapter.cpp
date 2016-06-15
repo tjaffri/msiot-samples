@@ -184,10 +184,8 @@ namespace AdapterLib
             RequestPtr = nullptr;
         }
         // sanity check
-        AdapterProperty* tempProperty = dynamic_cast<AdapterProperty*>(Property.get());
         if (ValuePtr == nullptr ||
-            tempProperty == nullptr ||
-            tempProperty->Attributes().empty())
+            Property == nullptr)
         {
             return static_cast<uint32_t>(ER_BAD_ARG_1);
         }
@@ -228,22 +226,19 @@ namespace AdapterLib
         }
 
         // sanity check
-        AdapterProperty* tempProperty = dynamic_cast<AdapterProperty*>(Property.get());
-        AdapterValue* tempValue = dynamic_cast<AdapterValue*>(Value.get());
-        if (tempValue == nullptr ||
-            tempProperty == nullptr ||
-            tempProperty->Attributes().empty())
+        if (Value == nullptr ||
+            Property == nullptr)
         {
             return static_cast<uint32_t>(ER_BAD_ARG_1);
         }
 
         // find corresponding attribute
-        for (auto attribute : tempProperty->Attributes())
+        for (auto attribute : Property->Attributes())
         {
             if (attribute->Value() != nullptr &&
-                attribute->Value()->Name() == tempValue->Name())
+                attribute->Value()->Name() == Value->Name())
             {
-                attribute->Value()->Data() = tempValue->Data();
+                attribute->Value()->Data() = Value->Data();
                 return ERROR_SUCCESS;
             }
         }
@@ -253,12 +248,11 @@ namespace AdapterLib
         AdapterValueVector paramsIn;
         AdapterValueVector paramsOut;
         ScriptHost* host = reinterpret_cast<ScriptHost*>((void*)device->HostContext());
-        std::shared_ptr<IAdapterValue> sharedVal(dynamic_cast<IAdapterValue*>(tempValue));
-        paramsIn.push_back(sharedVal);
+        paramsIn.push_back(Value);
 
         auto adapterRequest = std::make_shared<JsAdapterRequest>();
         RequestPtr = adapterRequest;
-        host->InvokePropertySetter(tempProperty->Name(), Value, [=](uint32_t status)
+        host->InvokePropertySetter(Property->Name(), Value, [=](uint32_t status)
         {
             if (status != ERROR_SUCCESS)
             {
