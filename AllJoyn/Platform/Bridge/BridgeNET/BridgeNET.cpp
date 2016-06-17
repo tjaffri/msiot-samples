@@ -76,8 +76,8 @@ namespace BridgeNet
     ref class AdapterRequestAwaiter
     {
     public:
-        AdapterRequestAwaiter(const std::shared_ptr<IAdapterAsyncRequest>& request)
-            : _requestPtr(request ? new std::shared_ptr<IAdapterAsyncRequest>[1]{ request } : nullptr) {};
+        AdapterRequestAwaiter(std::shared_ptr<IAdapterAsyncRequest> request)
+            : _requestPtr(request ? new std::shared_ptr<IAdapterAsyncRequest>(request) : nullptr) {};
 
         Task^ WaitAsync()
         {
@@ -93,7 +93,7 @@ namespace BridgeNet
                 auto& request = *_requestPtr;
                 status = request->Wait(INFINITE);
 
-                delete[] _requestPtr;
+                delete _requestPtr;
                 _requestPtr = nullptr;
             }
 
