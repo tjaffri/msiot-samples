@@ -286,7 +286,7 @@ namespace Bridge
     public:
         //
         //  Routine Description:
-        //      Status is called by the  Bridge component to get the current IO
+        //      Status is called by the Bridge component to get the current IO
         //      request status.
         //
         //  Arguments:
@@ -297,11 +297,11 @@ namespace Bridge
         //      ERROR_IO_PENDING: The request is pending.
         //      ERROR_REQUEST_ABORTED: Request was canceled, or wait was aborted.
         //
-        virtual uint32_t  Status() = 0;
+        virtual uint32_t Status() = 0;
 
         //
         //  Routine Description:
-        //      Wait is called by the  Bridge component to wait for a pending
+        //      Wait is called by the Bridge component to wait for a pending
         //      request.
         //
         //  Arguments:
@@ -311,14 +311,14 @@ namespace Bridge
         //  Return Value:
         //      ERROR_SUCCESS,
         //      ERROR_INVALID_HANDLE: Invalid request handle.
-        //      ERROR_TIMEWOUT: Timeout period has expired.
+        //      ERROR_TIMEOUT: Timeout period has expired.
         //      ERROR_REQUEST_ABORTED: Request was canceled, or wait was aborted.
         //
         virtual uint32_t Wait(uint32_t TimeoutMsec) = 0;
 
         //
         //  Routine Description:
-        //      Cancel is called by the  Bridge component to cancel a pending
+        //      Cancel is called by the Bridge component to cancel a pending
         //      request.
         //
         //  Arguments:
@@ -341,6 +341,41 @@ namespace Bridge
         //      ERROR_INVALID_HANDLE: Invalid request handle.
         //
         virtual uint32_t Release() = 0;
+    };
+
+    //
+    // IAdapterAsyncRequest interface.
+    // Description:
+    //  Extension of IAdapterIoRequest that supports continuation for improved asyncronicity.
+    //
+    class IAdapterAsyncRequest : public IAdapterIoRequest
+    {
+    public:
+        //
+        //  Routine Description:
+        //      Continue is called by the Bridge component to schedule a callback to be
+        //      invoked when the request fails or completes.
+        //
+        //      Only a single continuation may be set on a request. If the continuation is set after
+        //      the request has completed or failed perhaps because the request completed or failed
+        //      synchronously, then the continuation will still get invoked (immediately). The
+        //      continuation will NOT get invoked if request is cancelled.
+        //
+        //  Arguments:
+        //      continuationHandler - a callback invoked when the request fails or completes.
+        //
+        //    Callback Argument:
+        //      The status of the request so far; the value that would have been returned by Status()
+        //      if not for the continuation.
+        //
+        //    Callback Return Value:
+        //      The updated status of the request; the new value that will be returned by Status().
+        //
+        //  Return Value:
+        //      ERROR_SUCCESS,
+        //      ERROR_NOT_CAPABLE: Cannot set a continuation at this time.
+        //
+        virtual uint32_t Continue(std::function<uint32_t(uint32_t)> continuationHandler) = 0;
     };
 
     //

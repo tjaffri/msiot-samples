@@ -86,6 +86,8 @@ namespace Bridge
         std::map<std::string, DeviceSignal *> m_deviceSignals;
         uint32_t m_indexForSignal;
 
+        std::map<std::string, std::string> m_devicePropertySignatures;
+
         // alljoyn related
         alljoyn_busobject m_AJBusObject;
         alljoyn_interfacedescription m_interfaceDescription;

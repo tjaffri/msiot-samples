@@ -311,9 +311,9 @@ Leave:
     return status;
 }
 
-void DsbBridge::AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device)
+QStatus DsbBridge::AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device)
 {
-    CreateDevice(adapter, device);
+    return CreateDevice(adapter, device);
 }
 
 QStatus DsbBridge::CreateDevice(std::shared_ptr<IAdapter> adapter, std::shared_ptr<IAdapterDevice> device)

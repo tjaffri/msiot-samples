@@ -1,36 +1,71 @@
-function logDeviceState(device) {
+
+var device = null;
+var brightness = 0;
+var fakeDelay = 1000;
+
+function logDeviceState() {
     console.log("  device.name          : " + device.name);
     console.log("  device.props         : " + device.props);
 }
 
 
 module.exports = {
-    device: null,
     initDevice: function (dev) {
-        console.log("Javascript initialized.");
-        this.device = dev;
-        logDeviceState(this.device);
+        console.log("initDevice called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                device = dev;
+                logDeviceState();
+                console.log("initDevice completed.");
+                resolve();
+            }, fakeDelay);
+        });
     },
 
     turnOn: function () {
-        console.log("turnOn called.");
-        logDeviceState(this.device);
+        console.log("turnOn called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                brightness = 100;
+                logDeviceState();
+                console.log("turnOn completed.");
+                resolve();
+            }, fakeDelay);
+        });
     },
 
     turnOff: function () {
         console.log("turnOff called.");
-        logDeviceState(this.device);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                brightness = 0;
+                logDeviceState();
+                console.log("turnOff completed.");
+                resolve();
+            }, fakeDelay);
+        });
     },
 
-    setBrightness: function (brightness) {
-        console.log("setBrightness called with value: " + brightness);
-        logDeviceState(this.device);
+    getBrightness: function () {
+        console.log("getBrightness called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState();
+                console.log("getBrightness completed: " + brightness);
+                resolve(brightness);
+            }, fakeDelay);
+        });
+    },
+
+    setBrightness: function (value) {
+        console.log("setBrightness(" + value + ") called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                brightness = value;
+                logDeviceState();
+                console.log("setBrightness completed.");
+                resolve();
+            }, fakeDelay);
+        });
     }
-
 }
-
-// globals for JxCore host
-global.initDevice = module.exports.initDevice;
-global.turnOn = module.exports.turnOn;
-global.turnOff = module.exports.turnOff;
-global.setBrightness = module.exports.setBrightness;

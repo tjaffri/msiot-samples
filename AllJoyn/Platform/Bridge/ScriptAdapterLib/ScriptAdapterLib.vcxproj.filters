@@ -41,12 +41,18 @@
     <ClInclude Include="IJsAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsAdapterRequest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsAdapterRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

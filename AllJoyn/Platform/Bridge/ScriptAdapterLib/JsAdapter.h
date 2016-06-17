@@ -35,7 +35,7 @@ namespace AdapterLib
         JsAdapter();
         virtual ~JsAdapter();
 
-		static std::shared_ptr<JsAdapter> SingleInstance();
+        static std::shared_ptr<JsAdapter> SingleInstance();
 
         //
         // Adapter information
@@ -79,32 +79,37 @@ namespace AdapterLib
             _Out_opt_ std::shared_ptr<IAdapterIoRequest>& requestPtr
             ) override;
         uint32_t SetPropertyValue(
-			_In_ std::shared_ptr<IAdapterDevice> device,
-			_In_ std::shared_ptr<IAdapterProperty> aProperty,
-			_In_ std::shared_ptr<IAdapterValue> value,
-			_Out_opt_ std::shared_ptr<IAdapterIoRequest>& requestPtr
-			) override;
+            _In_ std::shared_ptr<IAdapterDevice> device,
+            _In_ std::shared_ptr<IAdapterProperty> aProperty,
+            _In_ std::shared_ptr<IAdapterValue> value,
+            _Out_opt_ std::shared_ptr<IAdapterIoRequest>& requestPtr
+            ) override;
 
         uint32_t CallMethod(
-			_In_ std::shared_ptr<IAdapterDevice> device,
-			_Inout_ std::shared_ptr<IAdapterMethod>& method,
-			_Out_opt_ std::shared_ptr<IAdapterIoRequest>& requestPtr
-			) override;
+            _In_ std::shared_ptr<IAdapterDevice> device,
+            _Inout_ std::shared_ptr<IAdapterMethod>& method,
+            _Out_opt_ std::shared_ptr<IAdapterIoRequest>& requestPtr
+            ) override;
 
         uint32_t RegisterSignalListener(
-			_In_ std::shared_ptr<IAdapterSignal> signal,
-			_In_ std::shared_ptr<IAdapterSignalListener> listener,
-			_In_opt_ intptr_t listenerContext = 0
-			) override;
+            _In_ std::shared_ptr<IAdapterSignal> signal,
+            _In_ std::shared_ptr<IAdapterSignalListener> listener,
+            _In_opt_ intptr_t listenerContext = 0
+            ) override;
         uint32_t UnregisterSignalListener(
-			_In_ std::shared_ptr<IAdapterSignal> signal,
-			_In_ std::shared_ptr<IAdapterSignalListener> listener
-			) override;
+            _In_ std::shared_ptr<IAdapterSignal> signal,
+            _In_ std::shared_ptr<IAdapterSignalListener> listener
+            ) override;
 
         // Load the given javascript and associate it with the given device by calling 'initDevice' function
-        void AddDevice(_In_ std::shared_ptr<IAdapterDevice>& device, _In_ const std::string& baseTypeXml, _In_ const std::string& jsScript, _In_ const std::string& jsModulesPath) override;
+        uint32_t AddDevice(
+            _In_ std::shared_ptr<IAdapterDevice> device,
+            _In_ const std::string& baseTypeXml,
+            _In_ const std::string& jsScript,
+            _In_ const std::string& jsModulesPath,
+            _Out_opt_ std::shared_ptr<IAdapterAsyncRequest>& requestPtr) override;
 
-		void SetAdapterError(std::shared_ptr<IJsAdapterError>& adaptErr) override;
+        void SetAdapterError(std::shared_ptr<IJsAdapterError>& adaptErr) override;
 
     protected:
         //
@@ -161,9 +166,9 @@ namespace AdapterLib
     private:
         void CreateSignals();
 
-		static std::shared_ptr<JsAdapter> g_TheOneOnlyInstance;
-		
-		std::string vendor;
+        static std::shared_ptr<JsAdapter> g_TheOneOnlyInstance;
+        
+        std::string vendor;
         std::string adapterName;
         std::string version;
         // the prefix for AllJoyn service should be something like
@@ -190,9 +195,9 @@ namespace AdapterLib
         struct SIGNAL_LISTENER_ENTRY
         {
             SIGNAL_LISTENER_ENTRY(
-				std::shared_ptr<IAdapterSignal> SignalToRegisterTo,
-				std::shared_ptr<IAdapterSignalListener> ListenerObject,
-				intptr_t ListenerContext
+                std::shared_ptr<IAdapterSignal> SignalToRegisterTo,
+                std::shared_ptr<IAdapterSignalListener> ListenerObject,
+                intptr_t ListenerContext
                 )
                 : Signal(SignalToRegisterTo)
                 , Listener(ListenerObject)
@@ -201,16 +206,16 @@ namespace AdapterLib
             }
 
             // The  signal object
-			std::shared_ptr<IAdapterSignal> Signal;
+            std::shared_ptr<IAdapterSignal> Signal;
 
             // The listener object
-			std::shared_ptr<IAdapterSignalListener> Listener;
+            std::shared_ptr<IAdapterSignalListener> Listener;
 
             //
             // The listener context that will be
             // passed to the signal handler
             //
-			intptr_t Context;
+            intptr_t Context;
         };
 
         // A map of signal handle (object's hash code) and related listener entry
@@ -222,6 +227,6 @@ namespace AdapterLib
         static const int DEVICE_REMOVAL_SIGNAL_INDEX = 1;
         static const int DEVICE_REMOVAL_SIGNAL_PARAM_INDEX = 0;
 
-		std::shared_ptr<IJsAdapterError> adapterError;
+        std::shared_ptr<IJsAdapterError> adapterError;
     };
 } // namespace AdapterLib

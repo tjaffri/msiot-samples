@@ -17,17 +17,19 @@
 
 #include "DeviceInfo.h"
 using namespace System;
+using namespace System::Threading::Tasks;
 
 namespace BridgeNet 
 {
-	public ref class BridgeJs
-	{
+    public ref class BridgeJs
+    {
     public:
         Int32 Initialize();
-        void AddDevice(DeviceInfo^ info, 
+        Task^ AddDeviceAsync(
+            DeviceInfo^ info, 
             String^ baseTypeXml, 
             String^ script,
             String^ modulesPath);
         void Shutdown();
-	};
+    };
 }

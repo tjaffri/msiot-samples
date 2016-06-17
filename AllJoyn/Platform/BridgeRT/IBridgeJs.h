@@ -19,13 +19,18 @@
 #include "DeviceInfo.h"
 
 using namespace Platform;
+using namespace Windows::Foundation;
 
 namespace BridgeRT
 {
-	public interface class IBridgeJs
-	{
-		virtual int32_t Initialize() = 0;
-		virtual void AddDevice(_In_ DeviceInfo^ device, _In_ Platform::String^ baseTypeXml, _In_ Platform::String^ jsScript, _In_ Platform::String^ modulesPath) = 0;
-		virtual void Shutdown() = 0;
-	};
+    public interface class IBridgeJs
+    {
+        virtual int32_t Initialize() = 0;
+        virtual IAsyncAction^ AddDeviceAsync(
+            _In_ DeviceInfo^ device,
+            _In_ Platform::String^ baseTypeXml,
+            _In_ Platform::String^ jsScript,
+            _In_ Platform::String^ modulesPath) = 0;
+        virtual void Shutdown() = 0;
+    };
 }

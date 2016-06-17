@@ -6,11 +6,10 @@
     <method name="turnOn" />
     <!-- Turn off the light -->
     <method name="turnOff" />
-    <!-- Set the brightness of the light -->
-    <method name="setBrightness">
-      <!-- Valid values range from 0 (off) to 100 (full brightness) -->
-      <arg name="brightness" type="u" direction="in" />
-    </method>
+    <!-- Get/set the brightness of the light -->
+    <!-- Valid values range from 0 (off) to 100 (full brightness) -->
+    <property name="brightness" type="u" access="readwrite">
+    </property>
     <!-- Called when there is an error during usage of this translator -->
     <signal name="error">
       <arg name="type" type="s" direction="out"/>

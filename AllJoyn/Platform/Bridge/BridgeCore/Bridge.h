@@ -38,7 +38,7 @@ namespace Bridge
         QStatus Initialize() override;
         QStatus Shutdown() override;
         void AddAdapter(_In_ std::shared_ptr<IAdapter> adapter) override;
-        void AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device) override;
+        QStatus AddDevice(_In_ std::shared_ptr<IAdapter> adapter, _In_ std::shared_ptr<IAdapterDevice> device) override;
 
         // IAdapterSignalListener implementation
         void AdapterSignalHandler(_In_ std::shared_ptr<IAdapter> sender, _In_ std::shared_ptr<IAdapterSignal> signal, _In_opt_ intptr_t context = 0) override;

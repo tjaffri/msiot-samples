@@ -81,8 +81,16 @@ QStatus DeviceMain::GetPropertyValue(_In_z_ const char* /*ifcName*/, _In_z_ cons
 	std::shared_ptr<IAdapterIoRequest> request = nullptr;
 	std::string sName(propName);
 
-	std::shared_ptr<IAdapterValue> value = nullptr;
-	std::shared_ptr<IAdapterProperty> iap( dynamic_cast<IAdapterProperty*>( new AdapterProperty(sName, sName)));
+    std::shared_ptr<IAdapterProperty> iap( dynamic_cast<IAdapterProperty*>( new AdapterProperty(sName, sName)));
+
+    auto signatureIterator = m_devicePropertySignatures.find(propName);
+    if (signatureIterator == m_devicePropertySignatures.end())
+    {
+        return ER_NOT_IMPLEMENTED;
+    }
+    std::string signature = signatureIterator->second;
+    std::shared_ptr<IAdapterValue> value = AllJoynHelper::GetDefaultAdapterValue(signature.c_str());
+
     unsigned int adapterStatus = GetAdapter()->GetPropertyValue(m_parent->GetAdapterDevice(), iap, sName, value, request);
     if (ERROR_IO_PENDING == adapterStatus &&
         nullptr != request)
@@ -104,11 +112,10 @@ QStatus DeviceMain::SetPropertyValue(_In_z_ const char* /*ifcName*/, _In_z_ cons
 	std::shared_ptr<IAdapterIoRequest> request = nullptr;
 	std::string sName(propName);
 
-	std::shared_ptr<IAdapterValue> value = nullptr;
-	std::shared_ptr<IAdapterProperty> iap(dynamic_cast<IAdapterProperty*>(new AdapterProperty(sName, sName)));
+    std::shared_ptr<IAdapterValue> value = nullptr;
+    std::shared_ptr<IAdapterProperty> iap(dynamic_cast<IAdapterProperty*>(new AdapterProperty(sName, sName)));
 
     // Get the value and convert it to an IAdapterValue
-
 
     status = AllJoynHelper::GetAdapterValueFromMsgArg(val, value);
     if (ER_OK == status)
@@ -123,7 +130,6 @@ QStatus DeviceMain::SetPropertyValue(_In_z_ const char* /*ifcName*/, _In_z_ cons
     }
 
     return status;
-
 }
 
 QStatus DeviceMain::Initialize(std::shared_ptr<BridgeDevice> parent)
@@ -311,6 +317,21 @@ QStatus DeviceMain::Initialize(std::shared_ptr<BridgeDevice> parent)
                                 }
                             }
                             delete[] members;
+                        }
+
+                        size_t cProps = alljoyn_interfacedescription_getproperties(interfaces[curInterface], nullptr, 0);
+                        if (cProps > 0)
+                        {
+                            alljoyn_interfacedescription_property* properties = new alljoyn_interfacedescription_property[cProps];
+                            if (alljoyn_interfacedescription_getproperties(interfaces[curInterface], properties, cProps) > 0)
+                            {
+                                for (size_t curProp = 0; curProp < cProps; curProp++)
+                                {
+                                    alljoyn_interfacedescription_property& property = properties[curProp];
+                                    m_devicePropertySignatures.insert(std::make_pair(property.name, property.signature));
+                                }
+                            }
+                            delete[] properties;
                         }
                     }
                 }
