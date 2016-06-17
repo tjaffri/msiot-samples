@@ -100,7 +100,11 @@ QStatus DeviceMain::GetPropertyValue(_In_z_ const char* /*ifcName*/, _In_z_ cons
     }
     if ((ERROR_SUCCESS == adapterStatus) && (value != nullptr))
     {
-        AllJoynHelper::SetMsgArg(value, val);
+        status = AllJoynHelper::SetMsgArg(value, val);
+    }
+    else
+    {
+        status = ER_FAIL;
     }
     return status;
 }

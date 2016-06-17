@@ -32,12 +32,16 @@ namespace Bridge
         template<typename T>
         static QStatus SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<T>& arrayArg);
         static QStatus SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<bool>& arrayArg);
+        static QStatus SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<std::string>& arrayArg);
+        static QStatus SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::unordered_map<std::string, std::string>& dictArg);
 
         static QStatus SetMsgArgFromAdapterObject(_In_ std::shared_ptr<IAdapterValue> adapterValue, _Inout_ alljoyn_msgarg msgArg, _In_ DeviceMain *deviceMain);
 
         template<typename T>
         static QStatus GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<T>& arrayArg);
         static QStatus GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<bool>& arrayArg);
+        static QStatus GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<std::string>& arrayArg);
+        static QStatus GetDictionaryFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::unordered_map<std::string, std::string>& dictArg);
 
         static QStatus GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Out_ std::shared_ptr<IAdapterValue>& adapterValue);
         static QStatus GetPropertyTypeFromMsgArg(_In_ alljoyn_msgarg msgArg, _Out_ PropertyType& propertyType);

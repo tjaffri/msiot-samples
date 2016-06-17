@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/vector/vector40.hpp>
 #include <boost/variant.hpp>
@@ -53,13 +54,20 @@ enum class PropertyType
     Char16Array,
     BooleanArray,
     StringArray,
-    Object
+    StringDictionary = 2048 + String,
+    Object = 4096
 };
 
 class PropertyValue
 {
     struct GetUnderlyingType : public boost::static_visitor<PropertyType>
     {
+    private:
+        // Embedded commas in the type cause problems with the macro.
+        typedef std::unordered_map<std::string, std::string> _string_dictionary;
+
+    public:
+
 #define PROPERTY_TYPE_MAPPING(T1, T2) PropertyType operator()(T1) const { return PropertyType::T2; }
         PROPERTY_TYPE_MAPPING(boost::blank, Empty);
         PROPERTY_TYPE_MAPPING(uint8_t, UInt8);
@@ -84,13 +92,14 @@ class PropertyValue
         PROPERTY_TYPE_MAPPING(std::vector<double>, DoubleArray);
         PROPERTY_TYPE_MAPPING(std::vector<char16_t>, Char16Array);
         PROPERTY_TYPE_MAPPING(std::vector<std::string>, StringArray);
+        PROPERTY_TYPE_MAPPING(_string_dictionary, StringDictionary);
         PROPERTY_TYPE_MAPPING(std::shared_ptr<IAdapterProperty>, Object);
         PROPERTY_TYPE_MAPPING(std::shared_ptr<IAdapterValue>, Object);
 		PROPERTY_TYPE_MAPPING(std::shared_ptr<IAdapterDevice>, Object);
 #undef PROPERTY_TYPE_MAPPING
     };
 
-    boost::make_variant_over<boost::mpl::vector26<
+    boost::make_variant_over<boost::mpl::vector27<
             boost::blank,
             uint8_t,
             int16_t,
@@ -114,6 +123,7 @@ class PropertyValue
             std::vector<double>,
             std::vector<char16_t>,
             std::vector<std::string>,
+            std::unordered_map<std::string, std::string>,
             std::shared_ptr<IAdapterProperty>,
             std::shared_ptr<IAdapterValue>,
 			std::shared_ptr<IAdapterDevice>
@@ -203,6 +213,11 @@ public:
         case PropertyType::UInt64Array: out = Join<uint64_t>(); break;
         case PropertyType::DoubleArray: out = Join<double>(); break;
         case PropertyType::StringArray: out = Join<std::string>(); break;
+
+        case PropertyType::StringDictionary:
+            // TODO: Convert dictionary to string
+            out = "{}";
+            break;
 
         default:
             break;

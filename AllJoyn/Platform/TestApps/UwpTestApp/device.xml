@@ -10,6 +10,12 @@
     <!-- Valid values range from 0 (off) to 100 (full brightness) -->
     <property name="brightness" type="u" access="readwrite">
     </property>
+    <property name="list" type="as" access="readwrite">
+      <description>A string array property for testing.</description>
+    </property>
+    <property name="dictionary" type="a{ss}" access="readwrite">
+      <description>A string dictionary property for testing.</description>
+    </property>
     <!-- Called when there is an error during usage of this translator -->
     <signal name="error">
       <arg name="type" type="s" direction="out"/>

@@ -1,6 +1,8 @@
 
 var device = null;
 var brightness = 0;
+var list = [];
+var dictionary = {};
 var fakeDelay = 1000;
 
 function logDeviceState() {
@@ -67,5 +69,52 @@ module.exports = {
                 resolve();
             }, fakeDelay);
         });
+    },
+
+    getList: function () {
+        console.log("getList called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState();
+                console.log("getList completed: " + JSON.stringify(list));
+                resolve(list);
+            }, fakeDelay);
+        });
+    },
+
+    setList: function (value) {
+        console.log("setList(" + JSON.stringify(value) + ") called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                list = value;
+                logDeviceState();
+                console.log("setList completed.");
+                resolve();
+            }, fakeDelay);
+        });
+    },
+
+    getDictionary: function () {
+        console.log("getDictionary called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                logDeviceState();
+                console.log("getDictionary completed: " + JSON.stringify(dictionary));
+                resolve(dictionary);
+            }, fakeDelay);
+        });
+    },
+
+    setDictionary: function (value) {
+        console.log("setDictionary(" + JSON.stringify(value) + ") called...");
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                dictionary = value;
+                logDeviceState();
+                console.log("setDictionary completed.");
+                resolve();
+            }, fakeDelay);
+        });
     }
+
 }

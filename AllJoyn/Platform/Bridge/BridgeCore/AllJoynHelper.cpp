@@ -275,88 +275,73 @@ QStatus AllJoynHelper::SetMsgArg(_In_ std::shared_ptr<IAdapterValue> adapterValu
     case PropertyType::BooleanArray:
     {
         auto boolArray = propertyValue.Get<std::vector<bool>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), boolArray);
         break;
     }
     case PropertyType::UInt8Array:
     {
         auto byteArray = propertyValue.Get<std::vector<uint8_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), byteArray);
         break;
     }
     case PropertyType::Char16Array:
     {
         auto charArray = propertyValue.Get<std::vector<char16_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), charArray);
         break;
     }
     case PropertyType::Int16Array:
     {
         auto intArray = propertyValue.Get<std::vector<int16_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), intArray);
         break;
     }
     case PropertyType::UInt16Array:
     {
         auto uintArray = propertyValue.Get<std::vector<uint16_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), uintArray);
         break;
     }
     case PropertyType::Int32Array:
     {
         auto intArray = propertyValue.Get<std::vector<int32_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), intArray);
         break;
     }
     case PropertyType::UInt32Array:
     {
         auto uintArray = propertyValue.Get<std::vector<uint32_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), uintArray);
         break;
     }
     case PropertyType::Int64Array:
     {
         auto intArray = propertyValue.Get<std::vector<int64_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), intArray);
         break;
     }
     case PropertyType::UInt64Array:
     {
         auto uintArray = propertyValue.Get<std::vector<uint64_t>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), uintArray);
         break;
     }
     case PropertyType::DoubleArray:
     {
         auto doubleArray = propertyValue.Get<std::vector<double>>();
-
         status = SetMsgArg(msgArg, signature.c_str(), doubleArray);
         break;
     }
     case PropertyType::StringArray:
     {
         auto strArray = propertyValue.Get<std::vector<std::string>>();
-        if (!strArray.empty())
-        {
-            std::vector<const char*> strings;
-            strings.reserve(strArray.size());
-            std::transform(strArray.begin(), strArray.end(), strings.begin(), [](const std::string& s) {return s.c_str();});
-            status = alljoyn_msgarg_set_and_stabilize(msgArg, signature.c_str(), strings.size(), strings.data());
-        }
-        else
-        {
-            // set empty string
-            status = alljoyn_msgarg_set(msgArg, signature.c_str(), 1, "");
-        }
+        status = SetMsgArg(msgArg, signature.c_str(), strArray);
+        break;
+    }
+    case PropertyType::StringDictionary:
+    {
+        auto strDict = propertyValue.Get<std::unordered_map<std::string, std::string>>();
+        status = SetMsgArg(msgArg, signature.c_str(), strDict);
         break;
     }
     default:
@@ -368,9 +353,41 @@ leave:
     return status;
 }
 
-QStatus AllJoynHelper::SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<bool>& arrayArg)
+template<typename T>
+QStatus AllJoynHelper::SetMsgArg(
+    _Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<T>& arrayArg)
 {
     QStatus status = ER_OK;
+
+    if (ajSignature.length() != 2 || ajSignature[0] != 'a')
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
+    if (!arrayArg.empty())
+    {
+        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), arrayArg.size(), arrayArg.data());
+    }
+    else
+    {
+        status = alljoyn_msgarg_set(msgArg, ajSignature.c_str(), 0, nullptr);
+    }
+
+leave:
+    return status;
+}
+
+QStatus AllJoynHelper::SetMsgArg(
+    _Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<bool>& arrayArg)
+{
+    QStatus status = ER_OK;
+
+    if (ajSignature != "ab")
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
 
     if (!arrayArg.empty())
     {
@@ -384,31 +401,75 @@ QStatus AllJoynHelper::SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::
     }
     else
     {
-        auto tempBuffer = std::make_unique<bool[]>(1);
-        tempBuffer[0] = false;
-        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), 1, tempBuffer.get());
+        status = alljoyn_msgarg_set(msgArg, ajSignature.c_str(), 0, nullptr);
     }
 
-
+leave:
     return status;
 }
 
-template<typename T>
-QStatus AllJoynHelper::SetMsgArg(_Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<T>& arrayArg)
+QStatus AllJoynHelper::SetMsgArg(
+    _Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::vector<std::string>& arrayArg)
 {
     QStatus status = ER_OK;
 
+    if (ajSignature != "as")
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
     if (!arrayArg.empty())
     {
-        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), arrayArg.size(), arrayArg.data());
+        std::vector<const char*> strings;
+        strings.resize(arrayArg.size());
+        std::transform(arrayArg.begin(), arrayArg.end(), strings.begin(), [](const std::string& s) {return s.c_str(); });
+        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), strings.size(), strings.data());
     }
     else
     {
-        auto tempBuffer = std::make_unique<T[]>(1);
-        tempBuffer[0] = T{};
-        status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), 1, tempBuffer.get());
+        status = alljoyn_msgarg_set(msgArg, ajSignature.c_str(), 0, nullptr);
     }
 
+leave:
+    return status;
+}
+
+QStatus AllJoynHelper::SetMsgArg(
+    _Inout_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _In_ std::unordered_map<std::string, std::string>& dictArg)
+{
+    QStatus status = ER_OK;
+
+    if (ajSignature != "a{ss}")
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
+    if (!dictArg.empty())
+    {
+        alljoyn_msgarg entries = alljoyn_msgarg_array_create(dictArg.size());
+
+        int i = 0;
+        std::for_each(dictArg.begin(), dictArg.end(), [&](const std::pair<std::string, std::string>& entry) {
+            if (status == ER_OK)
+            {
+                status = alljoyn_msgarg_set_and_stabilize(
+                    alljoyn_msgarg_array_element(entries, i++), "{ss}", entry.first.c_str(), entry.second.c_str());
+            }
+        });
+
+        if (status == ER_OK)
+        {
+            status = alljoyn_msgarg_set_and_stabilize(msgArg, ajSignature.c_str(), dictArg.size(), entries);
+        }
+    }
+    else
+    {
+        status = alljoyn_msgarg_set(msgArg, ajSignature.c_str(), 0, nullptr);
+    }
+
+leave:
     return status;
 }
 
@@ -419,67 +480,94 @@ QStatus AllJoynHelper::GetPropertyTypeFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
 
     switch (argType)
     {
-        case ALLJOYN_BOOLEAN:
-            {
-                propertyType = PropertyType::Boolean;
-            }
-            break;
+    case ALLJOYN_BOOLEAN:
+        propertyType = PropertyType::Boolean;
+        break;
+    case ALLJOYN_DOUBLE:
+        propertyType = PropertyType::Double;
+        break;
+    case ALLJOYN_INT32:
+        propertyType = PropertyType::Int32;
+        break;
+    case ALLJOYN_INT16:
+        propertyType = PropertyType::Int16;
+        break;
+    case ALLJOYN_UINT16:
+        propertyType = PropertyType::UInt16;
+        break;
+    case ALLJOYN_STRING:
+        propertyType = PropertyType::String;
+        break;
+    case ALLJOYN_UINT64:
+        propertyType = PropertyType::UInt64;
+        break;
+    case ALLJOYN_UINT32:
+        propertyType = PropertyType::UInt32;
+        break;
+    case ALLJOYN_INT64:
+        propertyType = PropertyType::Int64;
+        break;
+    case ALLJOYN_BYTE:
+        propertyType = PropertyType::UInt8;
+        break;
 
-        case ALLJOYN_DOUBLE:
+    case ALLJOYN_ARRAY:
+        {
+            char sig[10];
+            if (alljoyn_msgarg_signature(msgArg, sig, _countof(sig)) == 3)
             {
-                propertyType = PropertyType::Double;
+                switch (sig[1])
+                {
+                case ALLJOYN_BOOLEAN:
+                    propertyType = PropertyType::BooleanArray;
+                    break;
+                case ALLJOYN_DOUBLE:
+                    propertyType = PropertyType::DoubleArray;
+                    break;
+                case ALLJOYN_INT32:
+                    propertyType = PropertyType::Int32Array;
+                    break;
+                case ALLJOYN_INT16:
+                    propertyType = PropertyType::Int16Array;
+                    break;
+                case ALLJOYN_UINT16:
+                    propertyType = PropertyType::UInt16Array;
+                    break;
+                case ALLJOYN_STRING:
+                    propertyType = PropertyType::StringArray;
+                    break;
+                case ALLJOYN_UINT64:
+                    propertyType = PropertyType::UInt64Array;
+                    break;
+                case ALLJOYN_UINT32:
+                    propertyType = PropertyType::UInt32Array;
+                    break;
+                case ALLJOYN_INT64:
+                    propertyType = PropertyType::Int64Array;
+                    break;
+                case ALLJOYN_BYTE:
+                    propertyType = PropertyType::UInt8Array;
+                    break;
+                default:
+                    status = ER_NOT_IMPLEMENTED;
+                    break;
+                }
             }
-            break;
+            else if (strcmp(sig, "a{ss}") == 0)
+            {
+                propertyType = PropertyType::StringDictionary;
+            }
+            else
+            {
+                // Other array or dictionary types aren't implemented
+                status = ER_NOT_IMPLEMENTED;
+            }
+        }
+        break;
 
-        case ALLJOYN_INT32:
-            {
-                propertyType = PropertyType::Int32;
-            }
-            break;
-
-        case ALLJOYN_INT16:
-            {
-                propertyType = PropertyType::Int16;
-            }
-            break;
-
-        case ALLJOYN_UINT16:
-            {
-                propertyType = PropertyType::UInt16;
-            }
-            break;
-
-        case ALLJOYN_STRING:
-            {
-                propertyType = PropertyType::String;
-            }
-            break;
-
-        case ALLJOYN_UINT64:
-            {
-                propertyType = PropertyType::UInt64;
-            }
-            break;
-
-        case ALLJOYN_UINT32:
-            {
-                propertyType = PropertyType::UInt32;
-            }
-            break;
-
-        case ALLJOYN_INT64:
-            {
-                propertyType = PropertyType::Int64;
-            }
-            break;
-
-        case ALLJOYN_BYTE:
-            {
-                propertyType = PropertyType::UInt8;
-            }
-        default:
-            status = ER_BAD_ARG_1;
-            break;
+    default:
+        status = ER_NOT_IMPLEMENTED;
+        break;
     }
 
     return status;
@@ -492,9 +580,9 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
     string signature;
     PropertyType propertyType;
 
-	AdapterValue* aval = new AdapterValue(std::string(), nullptr);
-	std::shared_ptr<AdapterValue> sval(aval);
-	adapterValue = sval;
+    AdapterValue* aval = new AdapterValue(std::string(), nullptr);
+    std::shared_ptr<AdapterValue> sval(aval);
+    adapterValue = sval;
 
     // Get the property type
     status = GetPropertyTypeFromMsgArg(msgArg, propertyType);
@@ -627,8 +715,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::BooleanArray:
         {
             std::vector<bool> boolArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), boolArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, boolArray)) == ER_OK)
             {
                 adapterValue->Data() = boolArray;
             }
@@ -637,8 +724,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::UInt8Array:
         {
             std::vector<uint8_t> byteArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), byteArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, byteArray)) == ER_OK)
             {
                 adapterValue->Data() = byteArray;
             }
@@ -648,8 +734,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::Int16Array:
         {
             std::vector<int16_t> intArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
             {
                 adapterValue->Data() = intArray;
             }
@@ -658,8 +743,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::UInt16Array:
         {
             std::vector<uint16_t> uintArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
             {
                 adapterValue->Data() = uintArray;
             }
@@ -668,8 +752,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::Int32Array:
         {
             std::vector<int32_t> intArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
             {
                 adapterValue->Data() = intArray;
             }
@@ -678,8 +761,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::UInt32Array:
         {
             std::vector<uint32_t> uintArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
             {
                 adapterValue->Data() = uintArray;
             }
@@ -688,8 +770,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::Int64Array:
         {
             std::vector<int64_t> intArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
             {
                 adapterValue->Data() = intArray;
             }
@@ -698,8 +779,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::UInt64Array:
         {
             std::vector<uint64_t> uintArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
             {
                 adapterValue->Data() = uintArray;
             }
@@ -708,8 +788,7 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         case PropertyType::DoubleArray:
         {
             std::vector<double> doubleArray;
-
-            if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), doubleArray)) == ER_OK)
+            if ((status = GetArrayFromMsgArg(msgArg, signature, doubleArray)) == ER_OK)
             {
                 adapterValue->Data() = doubleArray;
             }
@@ -717,30 +796,22 @@ QStatus AllJoynHelper::GetAdapterValueFromMsgArg(_In_ alljoyn_msgarg msgArg, _Ou
         }
         case PropertyType::StringArray:
         {
-            alljoyn_msgarg entries;;
-            size_t numVals = 0;
-
-            status = alljoyn_msgarg_get(msgArg, signature.c_str(), &numVals, &entries);
-            if (ER_OK == status)
+            std::vector<std::string> stringArray;
+            if ((status = GetArrayFromMsgArg(msgArg, signature, stringArray)) == ER_OK)
             {
-                std::vector<std::string> stringArray;
-                stringArray.reserve(numVals);
-                    
-                for (size_t i = 0; i < numVals; ++i)
-                {
-                    char *tempBuffer = nullptr;
-                    status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &signature[1], &tempBuffer);
-                    if (ER_OK == status)
-                    {
-                        stringArray.emplace_back(tempBuffer);
-                    }
-
-                }
                 adapterValue->Data() = stringArray;
             }
             break;
         }
-
+        case PropertyType::StringDictionary:
+        {
+            std::unordered_map<std::string, std::string> stringDict;
+            if ((status = GetDictionaryFromMsgArg(msgArg, signature, stringDict)) == ER_OK)
+            {
+                adapterValue->Data() = stringDict;
+            }
+            break;
+        }
 
         default:
             status = ER_NOT_IMPLEMENTED;
@@ -883,8 +954,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::BooleanArray:
     {
         std::vector<bool> boolArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), boolArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, boolArray)) == ER_OK)
         {
             propertyValue = boolArray;
         }
@@ -893,8 +963,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::UInt8Array:
     {
         std::vector<uint8_t> byteArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), byteArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, byteArray)) == ER_OK)
         {
             propertyValue = byteArray;
         }
@@ -904,8 +973,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::Int16Array:
     {
         std::vector<int16_t> intArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
         {
             propertyValue = intArray;
         }
@@ -914,8 +982,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::UInt16Array:
     {
         std::vector<uint16_t> uintArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
         {
             propertyValue = uintArray;
         }
@@ -924,8 +991,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::Int32Array:
     {
         std::vector<int32_t> intArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
         {
             propertyValue = intArray;
         }
@@ -934,8 +1000,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::UInt32Array:
     {
         std::vector<uint32_t> uintArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
         {
             propertyValue = uintArray;
         }
@@ -944,8 +1009,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::Int64Array:
     {
         std::vector<int64_t> intArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), intArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, intArray)) == ER_OK)
         {
             propertyValue = intArray;
         }
@@ -954,8 +1018,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::UInt64Array:
     {
         std::vector<uint64_t> uintArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), uintArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, uintArray)) == ER_OK)
         {
             propertyValue = uintArray;
         }
@@ -964,8 +1027,7 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     case PropertyType::DoubleArray:
     {
         std::vector<double> doubleArray;
-
-        if ((status = GetArrayFromMsgArg(msgArg, signature.c_str(), doubleArray)) == ER_OK)
+        if ((status = GetArrayFromMsgArg(msgArg, signature, doubleArray)) == ER_OK)
         {
             propertyValue = doubleArray;
         }
@@ -973,30 +1035,13 @@ QStatus AllJoynHelper::GetAdapterValue(_Inout_ std::shared_ptr<IAdapterValue> ad
     }
     case PropertyType::StringArray:
     {
-        alljoyn_msgarg entries;;
-        size_t numVals = 0;
-
-        status = alljoyn_msgarg_get(msgArg, signature.c_str(), &numVals, &entries);
-        if (ER_OK == status)
+        std::vector<std::string> stringArray;
+        if ((status = GetArrayFromMsgArg(msgArg, signature, stringArray)) == ER_OK)
         {
-            std::vector<std::string> stringArray;
-            stringArray.reserve(numVals);
-
-            for (size_t i = 0; i < numVals; ++i)
-            {
-                char *tempBuffer = nullptr;
-                status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &signature[1], &tempBuffer);
-                if (ER_OK == status)
-                {
-                    stringArray.emplace_back(tempBuffer);
-                }
-
-            }
             propertyValue = stringArray;
         }
         break;
     }
-
 
     default:
         status = ER_NOT_IMPLEMENTED;
@@ -1007,13 +1052,46 @@ leave:
     return status;
 }
 
-QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<bool>& arrayArg)
+template<typename T>
+QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<T>& arrayArg)
 {
     QStatus status = ER_OK;
     alljoyn_msgarg entries;
     size_t numVals = 0;
 
-    if (ajSignature.length() != 2 && ajSignature[0] != 'a')
+    if (ajSignature.length() != 2 || ajSignature[0] != 'a')
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
+    status = alljoyn_msgarg_get(msgArg, ajSignature.c_str(), &numVals, &entries);
+    if (ER_OK == status)
+    {
+        arrayArg.resize(numVals);
+
+        for (size_t i = 0; i < numVals; i++)
+        {
+            status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &ajSignature[1], &arrayArg[i]);
+            if (ER_OK != status)
+            {
+                goto leave;
+            }
+        }
+    }
+
+leave:
+    return status;
+}
+
+QStatus AllJoynHelper::GetArrayFromMsgArg(
+    _In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<bool>& arrayArg)
+{
+    QStatus status = ER_OK;
+    alljoyn_msgarg entries;
+    size_t numVals = 0;
+
+    if (ajSignature != "ab")
     {
         status = ER_BAD_ARG_2;
         goto leave;
@@ -1033,7 +1111,7 @@ QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const
         }
 
         arrayArg = std::vector<bool>();
-        arrayArg.reserve(numVals);
+        arrayArg.resize(numVals);
         std::copy(boolArray.get(), boolArray.get() + numVals, arrayArg.begin());
     }
 
@@ -1041,14 +1119,14 @@ leave:
     return status;
 }
 
-template<typename T>
-QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<T>& arrayArg)
+QStatus AllJoynHelper::GetArrayFromMsgArg(
+    _In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::vector<std::string>& arrayArg)
 {
     QStatus status = ER_OK;
     alljoyn_msgarg entries;
     size_t numVals = 0;
 
-    if (ajSignature.length() != 2 && ajSignature[0] != 'a')
+    if (ajSignature != "as")
     {
         status = ER_BAD_ARG_2;
         goto leave;
@@ -1057,15 +1135,54 @@ QStatus AllJoynHelper::GetArrayFromMsgArg(_In_ alljoyn_msgarg msgArg, _In_ const
     status = alljoyn_msgarg_get(msgArg, ajSignature.c_str(), &numVals, &entries);
     if (ER_OK == status)
     {
-        arrayArg = std::vector<T>(numVals);
+        arrayArg.reserve(numVals);
 
         for (size_t i = 0; i < numVals; i++)
         {
-            status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &ajSignature[1], &arrayArg[i]);
+            char *tempBuffer = nullptr;
+            status = alljoyn_msgarg_get(alljoyn_msgarg_array_element(entries, i), &ajSignature[1], &tempBuffer);
             if (ER_OK != status)
             {
                 goto leave;
             }
+
+            arrayArg.emplace_back(tempBuffer);
+        }
+    }
+
+leave:
+    return status;
+}
+
+QStatus AllJoynHelper::GetDictionaryFromMsgArg(
+    _In_ alljoyn_msgarg msgArg, _In_ const std::string& ajSignature, _Out_ std::unordered_map<std::string, std::string>& dictArg)
+{
+    QStatus status = ER_OK;
+    alljoyn_msgarg entries;
+    size_t numVals = 0;
+
+    if (ajSignature != "a{ss}")
+    {
+        status = ER_BAD_ARG_2;
+        goto leave;
+    }
+
+    status = alljoyn_msgarg_get(msgArg, ajSignature.c_str(), &numVals, &entries);
+    if (ER_OK == status)
+    {
+        dictArg.reserve(numVals);
+
+        for (size_t i = 0; i < numVals; i++)
+        {
+            char *keyString = nullptr;
+            char *valueString = nullptr;
+            status = alljoyn_msgarg_get(
+                alljoyn_msgarg_array_element(entries, i), &ajSignature[1], &keyString, &valueString);
+            if (ER_OK != status)
+            {
+                goto leave;
+            }
+            dictArg.emplace(keyString, valueString);
         }
     }
 
@@ -1242,6 +1359,10 @@ QStatus AllJoynHelper::GetSignature(_In_ PropertyType propertyType, _Out_ std::s
         signature = "as";
         break;
 
+    case PropertyType::StringDictionary:
+        signature = "a{ss}";
+        break;
+
     default:
         status = ER_NOT_IMPLEMENTED;
         break;
@@ -1339,14 +1460,21 @@ std::shared_ptr<IAdapterValue> AllJoynHelper::GetDefaultAdapterValue(_In_ const 
         case 's':
             value = std::vector<std::string>{};
             break;
+
+        case '{':
+            if (strcmp(signature, "{ss}") == 0)
+            {
+                value = std::unordered_map<std::string, std::string>{};
+            }
+            break;
         }
     }
 
     if (value.Type() != PropertyType::Empty)
     {
-		AdapterValue* aval = new AdapterValue(std::string(), value);
-		std::shared_ptr<AdapterValue> sval(aval);
-		return sval;
+        AdapterValue* aval = new AdapterValue(std::string(), value);
+        std::shared_ptr<AdapterValue> sval(aval);
+        return sval;
     }
 
     return nullptr;
