@@ -33,6 +33,7 @@ namespace ScriptHostConstants
     const char Description[] = "description";
     const char This[] = "This";
     const char Then[] = "then";
+    const char Length[] = "length";
     const char MainModule[] = "mainModule";
     const char Exports[] = "exports";
     const char ContextName[] = "_adapterDeviceCtx";
@@ -122,7 +123,7 @@ public:
             if (!JX_IsUndefined(&prop))
             {
                 // An actual property was found. Get the value directly.
-                ConvertJxResultToOutParam(&prop, outParam);
+                ConvertJxValueToAdapterValue(&prop, outParam);
                 callback(ERROR_SUCCESS);
             }
             else
@@ -142,7 +143,7 @@ public:
                         {
                             if (success)
                             {
-                                ConvertJxResultToOutParam(asyncResult, outParam);
+                                ConvertJxValueToAdapterValue(asyncResult, outParam);
                                 callback(ERROR_SUCCESS);
                             }
                             else
@@ -183,7 +184,7 @@ public:
             std::vector<JXValue> jxInputParams;
             Bridge::AdapterValueVector inParams(1);
             inParams[0] = inParam;
-            ConvertPropertyValuesToJxValues(inParams, jxInputParams);
+            ConvertAdapterValuesToJxValues(inParams, jxInputParams);
 
             JXValue exports;
             GetExportsObject(&exports);
@@ -248,7 +249,7 @@ public:
         {
             // Convert the input parameters
             std::vector<JXValue> jxInputParams;
-            ConvertPropertyValuesToJxValues(inParams, jxInputParams);
+            ConvertAdapterValuesToJxValues(inParams, jxInputParams);
 
             // Should we insert the device object as the first parameter?
             if (insertDeviceObject)
@@ -265,7 +266,7 @@ public:
                 {
                     if (success)
                     {
-                        ConvertJxResultToOutParam(asyncResult, outParam);
+                        ConvertJxValueToAdapterValue(asyncResult, outParam);
                         callback(ERROR_SUCCESS);
                     }
                     else
@@ -283,62 +284,110 @@ public:
         });
     }
 
-    static void ConvertPropertyValuesToJxValues(const Bridge::AdapterValueVector& valuesIn, std::vector<JXValue>& valuesOut)
+private:
+
+    static void ConvertAdapterValueToJxValue(const std::shared_ptr<Bridge::IAdapterValue>& valueIn, JXValue* valueOut)
+    {
+        Bridge::PropertyValue ipv = (valueIn.get())->Data();
+        switch (ipv.Type())
+        {
+        case Bridge::PropertyType::Boolean:
+            JX_SetBoolean(valueOut, ipv.Get<bool>());
+            break;
+        case Bridge::PropertyType::UInt8:
+            JX_SetInt32(valueOut, ipv.Get<uint8_t>());
+            break;
+        case Bridge::PropertyType::Int16:
+            JX_SetInt32(valueOut, ipv.Get<int16_t>());
+            break;
+        case Bridge::PropertyType::Int32:
+            JX_SetInt32(valueOut, ipv.Get<int32_t>());
+            break;
+        case Bridge::PropertyType::Int64:
+            // Lossy conversion
+            JX_SetInt32(valueOut, ipv.Get<int32_t>());
+            break;
+        case Bridge::PropertyType::UInt16:
+            JX_SetInt32(valueOut, ipv.Get<uint16_t>());
+            break;
+        case Bridge::PropertyType::UInt32:
+            JX_SetInt32(valueOut, ipv.Get<uint32_t>());
+            break;
+        case Bridge::PropertyType::UInt64:
+            // Lossy conversion
+            JX_SetInt32(valueOut, ipv.Get<uint32_t>());
+            break;
+        case Bridge::PropertyType::Double:
+            JX_SetDouble(valueOut, ipv.Get<double>());
+            break;
+        case Bridge::PropertyType::String:
+            JX_SetString(valueOut, ipv.Get<std::string>().c_str(), (const int32_t)ipv.Get<std::string>().length());
+            break;
+        case Bridge::PropertyType::Int32Array:
+        {
+            JX_CreateArrayObject(valueOut);
+            std::vector<int32_t> array = ipv.Get<std::vector<int32_t>>();
+            for (unsigned int i = 0; i < array.size(); i++)
+            {
+                JXValue elementValue;
+                JX_New(&elementValue);
+                JX_SetInt32(&elementValue, array[i]);
+                JX_SetIndexedProperty(valueOut, i, &elementValue);
+                JX_Free(&elementValue);
+            }
+            break;
+        }
+        // TODO: Other array types
+        case Bridge::PropertyType::StringArray:
+        {
+            JX_CreateArrayObject(valueOut);
+            std::vector<std::string> array = ipv.Get<std::vector<std::string>>();
+            for (unsigned int i = 0; i < array.size(); i++)
+            {
+                JXValue elementValue;
+                JX_New(&elementValue);
+                JX_SetString(&elementValue, array[i].c_str(), (const int32_t)array[i].size());
+                JX_SetIndexedProperty(valueOut, i, &elementValue);
+                JX_Free(&elementValue);
+            }
+            break;
+        }
+        case Bridge::PropertyType::StringDictionary:
+        {
+            JX_CreateEmptyObject(valueOut);
+            auto dict = ipv.Get<std::unordered_map<std::string, std::string>>();
+            for (const std::pair<std::string, std::string>& dictElement : dict)
+            {
+                JXValue elementValue;
+                JX_New(&elementValue);
+                JX_SetString(&elementValue, dictElement.second.c_str(), (const int32_t)dictElement.second.size());
+                JX_SetNamedProperty(valueOut, dictElement.first.c_str(), &elementValue);
+                JX_Free(&elementValue);
+            }
+            break;
+        }
+        default:
+            std::string errorString = "Not implemented: Cannot convert AdapterValue to JXValue";
+            JX_SetError(valueOut, errorString.c_str(), (const uint32_t)errorString.length());
+            break;
+        }
+    }
+
+    static void ConvertAdapterValuesToJxValues(const Bridge::AdapterValueVector& valuesIn, std::vector<JXValue>& valuesOut)
     {
         for (auto& valueIn : valuesIn)
         {
             if (valueIn != nullptr)
             {
-                Bridge::PropertyValue ipv = (valueIn.get())->Data();
-                JXValue value;
-                JX_New(&value);
-                switch (ipv.Type())
-                {
-                    case Bridge::PropertyType::Boolean:
-                        JX_SetBoolean(&value, ipv.Get<bool>());
-                        break;
-                    case Bridge::PropertyType::UInt8:
-                        JX_SetInt32(&value, ipv.Get<uint8_t>());
-                        break;
-                    case Bridge::PropertyType::Int16:
-                        JX_SetInt32(&value, ipv.Get<int16_t>());
-                        break;
-                    case Bridge::PropertyType::Int32:
-                        JX_SetInt32(&value, ipv.Get<int32_t>());
-                        break;
-                    case Bridge::PropertyType::Int64:
-                        // Lossy conversion
-                        JX_SetInt32(&value, ipv.Get<int32_t>());
-                        break;
-                    case Bridge::PropertyType::UInt16:
-                        JX_SetInt32(&value, ipv.Get<uint16_t>());
-                        break;
-                    case Bridge::PropertyType::UInt32:
-                        JX_SetInt32(&value, ipv.Get<uint32_t>());
-                        break;
-                    case Bridge::PropertyType::UInt64:
-                        // Lossy conversion
-                        JX_SetInt32(&value, ipv.Get<uint32_t>());
-                        break;
-                    case Bridge::PropertyType::Double:
-                        JX_SetDouble(&value, ipv.Get<double>());
-                        break;
-                    case Bridge::PropertyType::String:
-                        JX_SetString(&value, ipv.Get<std::string>().c_str(), (const uint32_t)ipv.Get<std::string>().length());
-                        break;
-                    default:
-                    {
-                        std::string errorString = "Failed to convert AdapterValue into JXValue";
-                        JX_SetError(&value, errorString.c_str(), (const uint32_t)errorString.length());
-                        break;
-                    }
-                }
-                valuesOut.push_back(value);
+                JXValue valueOut;
+                JX_New(&valueOut);
+                ConvertAdapterValueToJxValue(valueIn, &valueOut);
+                valuesOut.push_back(valueOut);
             }
         }
     }
 
-    static void ConvertJxResultToOutParam(JXValue* result, std::shared_ptr<Bridge::IAdapterValue> valueOut)
+    static void ConvertJxValueToAdapterValue(JXValue* valueIn, std::shared_ptr<Bridge::IAdapterValue> valueOut)
     {
         if (valueOut == nullptr)
         {
@@ -351,43 +400,182 @@ public:
         switch (ipv.Type())
         {
         case Bridge::PropertyType::Boolean:
-            value = JX_GetBoolean(result);
+            value = JX_GetBoolean(valueIn);
             break;
         case Bridge::PropertyType::UInt8:
-            value = (uint8_t)JX_GetInt32(result);
+            value = (uint8_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::Int16:
-            value = (int16_t)JX_GetInt32(result);
+            value = (int16_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::Int32:
-            value = (int32_t)JX_GetInt32(result);
+            value = (int32_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::Int64:
             // Lossy conversion
-            value = (int64_t)JX_GetInt32(result);
+            value = (int64_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::UInt16:
-            value = (uint16_t)JX_GetInt32(result);
+            value = (uint16_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::UInt32:
-            value = (uint32_t)JX_GetInt32(result);
+            value = (uint32_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::UInt64:
             // Lossy conversion
-            value = (uint64_t)JX_GetInt32(result);
+            value = (uint64_t)JX_GetInt32(valueIn);
             break;
         case Bridge::PropertyType::Double:
-            value = JX_GetDouble(result);
+            value = JX_GetDouble(valueIn);
             break;
         case Bridge::PropertyType::String:
-            value = std::move(std::string(JX_GetString(result)));
+            value = std::move(std::string(JX_GetString(valueIn)));
             break;
+        case Bridge::PropertyType::Int32Array:
+        {
+            std::vector<int> array;
+            JXValue arrayLength;
+            JX_GetNamedProperty(valueIn, ScriptHostConstants::Length, &arrayLength);
+            if (JX_IsInt32(&arrayLength))
+            {
+                int length = (unsigned int)JX_GetInt32(&arrayLength);
+                for (int i = 0; i < length; i++)
+                {
+                    JXValue elementValue;
+                    JX_GetIndexedProperty(valueIn, i, &elementValue);
+                    if (JX_IsInt32(&elementValue))
+                    {
+                        int elementInt = JX_GetInt32(&elementValue);
+                        array.push_back(elementInt);
+                    }
+                    else
+                    {
+                        array.push_back(0);
+                    }
+
+                    JX_Free(&elementValue);
+                }
+            }
+
+            JX_Free(&arrayLength);
+            value = std::move(array);
+            break;
+        }
+        // TODO: Other array types
+        case Bridge::PropertyType::StringArray:
+        {
+            std::vector<std::string> array;
+            JXValue arrayLength;
+            JX_GetNamedProperty(valueIn, ScriptHostConstants::Length, &arrayLength);
+            if (JX_IsInt32(&arrayLength))
+            {
+                int length = (unsigned int)JX_GetInt32(&arrayLength);
+                for (int i = 0; i < length; i++)
+                {
+                    JXValue elementValue;
+                    JX_GetIndexedProperty(valueIn, i, &elementValue);
+                    if (JX_IsString(&elementValue))
+                    {
+                        char* elementString = JX_GetString(&elementValue);
+                        array.emplace_back(elementString);
+                    }
+                    else
+                    {
+                        array.emplace_back("");
+                    }
+
+                    JX_Free(&elementValue);
+                }
+            }
+
+            JX_Free(&arrayLength);
+            value = std::move(array);
+            break;
+        }
+        case Bridge::PropertyType::StringDictionary:
+        {
+            std::unordered_map<std::string, std::string> dict;
+            if (JX_IsObject(valueIn))
+            {
+                JXValue keysFunc;
+                JX_Evaluate("Object.keys", nullptr, &keysFunc);
+                if (JX_IsFunction(&keysFunc))
+                {
+                    JXValue keysArray;
+                    JX_CallFunction(&keysFunc, valueIn, 1, &keysArray);
+
+                    JXValue arrayLength;
+                    JX_GetNamedProperty(&keysArray, ScriptHostConstants::Length, &arrayLength);
+
+                    if (JX_IsInt32(&arrayLength))
+                    {
+                        int length = (unsigned int)JX_GetInt32(&arrayLength);
+                        for (int i = 0; i < length; i++)
+                        {
+                            JXValue key;
+                            JX_GetIndexedProperty(&keysArray, i, &key);
+
+                            if (JX_IsString(&key))
+                            {
+                                char* keyString = JX_GetString(&key);
+
+                                JXValue value;
+                                JX_GetNamedProperty(valueIn, keyString, &value);
+                                if (JX_IsString(&value))
+                                {
+                                    char* valueString = JX_GetString(&value);
+                                    dict.emplace(keyString, valueString);
+                                }
+                                else
+                                {
+                                    dict.emplace(keyString, "");
+                                }
+
+                                JX_Free(&value);
+                            }
+
+                            JX_Free(&key);
+                        }
+                    }
+
+                    JX_Free(&keysArray);
+                    JX_Free(&arrayLength);
+                }
+
+                JX_Free(&keysFunc);
+            }
+
+            value = std::move(dict);
+            break;
+        }
         default:
-            value = std::move(std::string("Not implemented: Cannot convert JX data type back to PropertyValue"));
+            value = std::move(std::string("Not implemented: Cannot convert JXValue to AdapterValue"));
             break;
         }
 
         valueOut->Data() = value;
+    }
+
+    static void ConvertJxValuesToAdapterValues(std::vector<JXValue>& valuesIn, Bridge::AdapterValueVector& valuesOut)
+    {
+        Bridge::PropertyValue value = nullptr;
+        int i = 0;
+        for (auto& valueIn : valuesIn)
+        {
+            std::shared_ptr<Bridge::IAdapterValue> adapterValue;
+            if (valuesOut.size() > i)
+            {
+                adapterValue = valuesOut[i];
+            }
+            else
+            {
+                adapterValue = std::make_shared<Bridge::AdapterValue>("", value);
+                valuesOut.push_back(adapterValue);
+            }
+
+            ConvertJxValueToAdapterValue(&valueIn, adapterValue);
+            i++;
+        }
     }
 
     void GetAsyncJxResult(
@@ -452,60 +640,6 @@ public:
         // The result is not a Promise, so just invoke the success handler directly.
         resultCallback(true, result);
     }
-
-    static void ConvertJxValuesToAdapterValues(std::vector<JXValue>& valuesIn, Bridge::AdapterValueVector& valuesOut)
-    {
-        std::string name;
-        Bridge::PropertyValue value = nullptr;
-        int ix = 0;
-        for (auto& valueIn : valuesIn)
-        {
-            switch (valueIn.type_)
-            {
-                case RT_Null:
-                {
-                    value = nullptr;
-                }
-                break;
-                case RT_Boolean:
-                {
-                    value = JX_GetBoolean(&valueIn);
-                }
-                break;
-                case RT_Double:
-                {
-                    value = JX_GetDouble(&valueIn);
-                }
-                break;
-                case RT_Int32:
-                {
-                    value = JX_GetInt32(&valueIn);
-                }
-                break;
-                case RT_String:
-                {
-                    value = std::move(std::string(JX_GetString(&valueIn)));
-                }
-                break;
-                default:
-                    value = std::move(std::string("Not implemented: Cannot convert JX data type back to PropertyValue"));
-                    break;
-            }
-
-            if (valuesOut.size() > ix)
-            {
-                valuesOut[ix]->Data() = value;
-            }
-            else
-            {
-                std::shared_ptr<Bridge::AdapterValue> adapterValue(new Bridge::AdapterValue(name, value));
-                valuesOut.push_back(adapterValue);
-            }
-            ix++;
-        }
-    }
-
-private:
 
     uint32_t InternalCallScriptFunction(JXValue* result, const std::string& name, std::vector<JXValue>& params)
     {
