@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Package IgnorableNamespaces="uap uap2 uap3 mp desktop"
+         xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
+         xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+         xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10">
+  <Identity Name="OpenT2TAllJoynBridgeHost" Publisher="CN=OpenT2T.Org"  Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="4fae9aa5-797b-4056-b2f3-782cc089c5fe" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>OpenT2T AllJoyn Bridge Host</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14316.0" MaxVersionTested="10.0.14316.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="UWP.App">
+      <uap:VisualElements DisplayName="OpenT2T AllJoyn Bridge Host" Square150x150Logo="Assets\Square150x150Logo.scale-200.png" Square44x44Logo="Assets\Square44x44Logo.scale-200.png" Description="Hosts AllJoyn Device System Bridge" BackgroundColor="#00b2f0">
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile>
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.appService">
+          <uap:AppService Name="CommunicationService" />
+        </uap:Extension>
+      <desktop:Extension Category="windows.fullTrustProcess" Executable="BridgeHostStartupTask.exe" />
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="allJoyn" />
+    <Capability Name="privateNetworkClientServer" />
+    <rescap:Capability Name="runFullTrust"/> 
+  </Capabilities>
+</Package>

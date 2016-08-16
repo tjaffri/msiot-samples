@@ -219,3 +219,6 @@ libs/
 
 #include all files in external
 !External/**
+
+#Visual studio Code
+.vscode

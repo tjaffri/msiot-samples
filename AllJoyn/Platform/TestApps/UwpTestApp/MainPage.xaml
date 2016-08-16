@@ -38,8 +38,9 @@
                 <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> JS Modules path:</TextBlock>
                 <TextBox x:Name="modulesPath" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
             </StackPanel>
-            <Button Click="InitButton_Click">Initialize DSB</Button>
-            <Button Click="AddButton_Click">Add device</Button>
+            <Button Click="InitButton_Click" Content="Initialize DSB"/>
+            <CheckBox x:Name="AppSvcChkBox" Content="Use App Service" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,337,0"/>
+            <Button Click="AddButton_Click" Content="Add device"/>
             <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
                 <TextBox x:Name="msg" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
             </StackPanel>

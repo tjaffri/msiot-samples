@@ -211,17 +211,18 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PreprocessorDefinitions>_WINRT_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;_WINRT_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories);..\Common;..\Bridge;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\External\boost;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\Common;..\Bridge;..\Bridge\ScriptAdapterLib;..\Bridge\BridgeCore</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\x64\jx.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

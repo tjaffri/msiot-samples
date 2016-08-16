@@ -345,6 +345,13 @@ QStatus BridgeDevice::InitializeAllJoyn()
         goto leave;
     }
 
+    // Initialize AllJoyn
+    status = alljoyn_init();
+    if (ER_OK != status)
+    {
+        goto leave;
+    }
+
     // create the bus attachment
     AllJoynHelper::EncodeStringForAppName(m_adapter->ExposedApplicationName(), appName);
     m_AJBusAttachment = alljoyn_busattachment_create(appName.c_str(), QCC_TRUE);

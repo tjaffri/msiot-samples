@@ -191,7 +191,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;..\..\External\JxCore\inc;..\BridgeCore;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
