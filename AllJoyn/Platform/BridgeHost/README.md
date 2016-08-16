@@ -2,12 +2,12 @@
 ## Centennial app that hosts the AllJoyn Device System Bridge :
 ###  There are two parts in the centennial app
 * BridgeHost : This project represents UWP portion fo the app that has hosts the app service, which in turns hosts the bridge (DSB).
-* BridgeHostStartupTask : This is a win32 application that runs on startup (longon), starts the app service and holds on to it so that underlying AllJoyn bridge (DSB) is alive. 
+* BridgeHostStartupTask : This project is a win32 application that runs on startup (logon), starts the app service and holds on to it so that underlying AllJoyn bridge (DSB) is alive. 
 
 App service stores info (DeviceInfo) about previously onboarded devices in the application data, organized in the following application data container hierarchy. 
 This data gets deleted upon uninstall. Ideally, corresponding cloud service should store this information which app can sync to.
 That will ensure devices appear on the bus even after uninstall/install and not required to be onboarded again.
-The name of the child containers to 'OnboardedDevices' container is generated ussing (app service)client provided 'Cateory' (in valueset) concatenated witt device ID.
+The name of the child containers to 'OnboardedDevices' container is generated using (app service)client provided 'Category' (in valueset) concatenated with device ID.
 This should change per final design.
 
 * OnboardedDevices
@@ -20,9 +20,8 @@ This should change per final design.
 This data is used when gets activated upon startup (logon) and onboards those devices.
 
 The Ultimate effect is, user sees the devices (on AJ bus), even after restarting the machine. This is the magic we want.
-Cosole or client app can come and onboard new devices and go. But Bridge/App services stays alive.
-
-Startup task has the heeath check and starts app service if not UP.  
+Console or client app can come and onboard new devices and go. But Bridge/App services stays alive.
+Startup task has the health check (does every 5 seconds) and starts app service if not UP.
 
 ## Debugging app service in isolation, in visual studio.
 	1. First build BridgeHost UWP app usual
@@ -72,4 +71,6 @@ certificates: https://msdn.microsoft.com/en-us/library/windows/desktop/jj835832(
 MakeAppx: https://msdn.microsoft.com/en-us/library/windows/desktop/hh446767(v=vs.85).aspx
 	(MakeAppx & signtool are available in razzle environment as well.!)
 
+## Future/Pending
+* Add additional app service commands for removing onboarded device, enumerating, partial update (device id) etc...
 
