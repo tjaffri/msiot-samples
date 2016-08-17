@@ -74,3 +74,12 @@ MakeAppx: https://msdn.microsoft.com/en-us/library/windows/desktop/hh446767(v=vs
 ## Future/Pending
 * Add additional app service commands for removing onboarded device, enumerating, partial update (device id) etc...
 
+
+### Main files that have the implementation.
+Files that you would care are below. Rest are details.
+
+Startup Task: AllJoyn/Platform/BridgeHostStartupTask/Program.cs
+App Service: AllJoyn/Platform/BridgeHost/App.xaml.cs
+
+Test app:
+AllJoyn/Platform/TestApps/UwpTestApp/MainPage.xaml.cs
