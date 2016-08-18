@@ -137,7 +137,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;..\..\External\JxCore\inc;..\BridgeCore;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,7 +152,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\boost;..\..\External\JxCore\inc;..\BridgeCore;..\ScriptAdapterLib;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,7 +165,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;..\..\External\JxCore\inc;..\BridgeCore;..\ScriptAdapterLib;..\ScriptAdapterLib\Deps\inc;..\Common;..\Bridge;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
