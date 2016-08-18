@@ -36,11 +36,7 @@ namespace OpenT2T.Bridge
     [DataContract]
     internal class DeviceProps
     {
-        public static DeviceProps CreateInstance(string id, string accessToken)
-        {
-            return new DeviceProps(id, accessToken);
-        }
-        private DeviceProps(string identifier, string accessToken)
+        public DeviceProps(string identifier, string accessToken)
         {
             id = identifier;
             access_token = accessToken;
@@ -70,8 +66,32 @@ namespace OpenT2T.Bridge
 
         private AppServiceConnection appServiceConnection;
         private BackgroundTaskDeferral appServiceDeferral;
-        private const string OnboardedDevicesContainerName = "OnboardedDevices";
         public static bool isStartUpTaskRunning = false;
+
+        /// <summary>
+        ///  App data containers are used to store onboarding information, both transient and persistent.
+        ///  An OnboardingID is a concatenation of category and device id. : 'WinkThermoStat:4876334'
+        ///  Categories are controlled by the client app.
+        /// Container named 'OnboardedDevices' starts clean, on App services start up and stores the deivices that are successfully onboarded.
+        /// This is used to ensure that a device is surface to AllJoyn bus, only once.
+        /// Hierarchy
+        ///  OnboardedDevices
+        ///      OnboardingID : DeviceInfo
+        ///      OnboardingID : DeviceInfo
+        ///      OnboardingID : DeviceInfo
+        /// There will be other set of containers, one for each device category, that are persistent. 
+        /// This data is used to surface/onboard devices to AllJoyn bus, on app service startup.
+        /// Below is the hierarchy of containers. 
+        ///      WinkThermoStat
+        ///          OnboardingID : DeviceInfo
+        ///          OnboardingID : DeviceInfo
+        ///      VeeraLightBulb
+        ///          OnboardingID : DeviceInfo
+        ///      NestThermostat
+        ///          OnboardingID : DeviceInfo
+        //// </summary>
+        private const string OnboardedDevicesContainerName = "OnboardedDevices"; // 
+
         /// <summary>
         /// Initializes the app service on the host process 
         /// </summary>
@@ -105,7 +125,7 @@ namespace OpenT2T.Bridge
             }
             else
             {
-                StartOpenT2TAppServiceAnchorProcess(); // Background process is not yet launched. Launch it so that the reference is kept alive.
+                await StartOpenT2TAppServiceAnchorProcess(); // Background process is not yet launched. Launch it so that the reference is kept alive.
             }
 
             // Onboard the devices that were onboarded previously.
@@ -191,7 +211,7 @@ namespace OpenT2T.Bridge
                     }
                     catch (Exception e)
                     {
-                        // Ignore
+                        Debug.WriteLine("Exception during onboarding: " + e.Message);
                     }
                 }
             }
@@ -201,7 +221,7 @@ namespace OpenT2T.Bridge
             string onboardingID =  onboardingDataValueSet["category"] as string + ":" + onboardingDataValueSet["id"];
             return onboardingID;
         }
-        async void StartOpenT2TAppServiceAnchorProcess()
+        async Task StartOpenT2TAppServiceAnchorProcess()
         {
             if (!isStartUpTaskRunning)
             {
@@ -242,7 +262,7 @@ namespace OpenT2T.Bridge
                 device.Name = onboardingData["name"] as string;
                 DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(DeviceProps));
                 MemoryStream memStream = new MemoryStream();
-                jsonSerializer.WriteObject(memStream, DeviceProps.CreateInstance(onboardingData["id"] as string, onboardingData["access_token"] as string));
+                jsonSerializer.WriteObject(memStream, new DeviceProps(onboardingData["id"] as string, onboardingData["access_token"] as string));
                 memStream.Position = 0;
                 StreamReader reader = new StreamReader(memStream);
                 device.Props = reader.ReadToEnd();

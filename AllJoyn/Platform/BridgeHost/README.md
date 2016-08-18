@@ -10,14 +10,31 @@ That will ensure devices appear on the bus even after uninstall/install and not 
 The name of the child containers to 'OnboardedDevices' container is generated using (app service)client provided 'Category' (in valueset) concatenated with device ID.
 This should change per final design.
 
+## App data Containers:  Used for storing device infomation
+App data containers are used to store onboarding information, both transient and persistent.
+An OnboardingID is concatenation of category and device id. : 'WinkThermoStat:4876334'
+Categories are controlled by the client app.
+
+### Hierarchy
+'OnboradingId : DeviceInfo' represent key-value pair.
+Container named 'OnboardedDevices' starts clean, on App services start up and stores the deivices that are successfully onboarded.
+This is used to ensure that a device is surface to AllJoyn bus, only once.
+
 * OnboardedDevices
-	* WinkThermoStat:'*device id*'
-		* 'DeviceInfo'
-	* WinkThermoStat:'*device id*'
-		* 'DeviceInfo'
-	* VeeraLightBulb:'*device id*'
-		* 'DeviceInfo'
-This data is used when gets activated upon startup (logon) and onboards those devices.
+*       OnboardingID : DeviceInfo
+        OnboardingID : DeviceInfo
+
+
+There will be other set of containers, one for each device category, that are persistent. 
+This data is used to surface/onboard devices to AllJoyn bus, on app service startup.
+Below is the hierarchy of containers. 
+* WinkThermoStat
+*       OnboardingID : DeviceInfo
+        OnboardingID : DeviceInfo
+* VeeraLightBulb
+*       OnboardingID : DeviceInfo
+* NestThermostat
+*       OnboardingID : DeviceInfo
 
 The Ultimate effect is, user sees the devices (on AJ bus), even after restarting the machine. This is the magic we want.
 Console or client app can come and onboard new devices and go. But Bridge/App services stays alive.
@@ -73,7 +90,7 @@ MakeAppx: https://msdn.microsoft.com/en-us/library/windows/desktop/hh446767(v=vs
 
 ## Future/Pending
 * Add additional app service commands for removing onboarded device, enumerating, partial update (device id) etc...
-
+* Add additional properties to DeviceProps class (used for serialize the device props, when calling into Bridge) to match DeviceInfo in BridgeRT
 
 ### Main files that have the implementation.
 Files that you would care are below. Rest are details.

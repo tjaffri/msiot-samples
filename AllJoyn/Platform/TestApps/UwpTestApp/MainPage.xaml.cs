@@ -176,7 +176,7 @@ namespace UwpTestApp
         private async Task<ValueSet> GetBridgeAppServiceValueSet(string name, string props, string jsFile, string schemaFile)
         {
             DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(DeviceProps));
-            MemoryStream ms = new MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(props));
+            MemoryStream ms = new MemoryStream(System.Text.UTF8Encoding.UTF8.GetBytes(props));
             DeviceProps deviceProps = (DeviceProps)js.ReadObject(ms);
 
             // Get the data from application data (cached). If not present, create and add.

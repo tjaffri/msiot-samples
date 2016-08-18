@@ -91,7 +91,6 @@ namespace OpenT2T.Bridge
         {
             Console.ForegroundColor = ConsoleColor.Red;
             isConnectionClosed = true;
-            connection = null;
             Console.WriteLine(string.Format("AppServiceConnection is closed!: Status : " + args.Status));
         }
 
@@ -100,19 +99,7 @@ namespace OpenT2T.Bridge
         /// </summary>
         private static void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            string key = args.Request.Message.First().Key;
-            string value = args.Request.Message.First().Value.ToString();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(string.Format("Received message '{0}' with value '{1}'", key, value));
-            //if (key == "request")
-            {
-                ValueSet valueSet = new ValueSet();
-                valueSet.Add("response", value.ToUpper());
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(string.Format("Sending response: '{0}'", value.ToUpper()));
-                Console.WriteLine();
-                args.Request.SendResponseAsync(valueSet).Completed += delegate { };
-            }
+            throw new NotImplementedException();
         }
         private static async  Task<bool> isHealthy()
         {
