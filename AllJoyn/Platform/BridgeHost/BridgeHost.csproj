@@ -181,20 +181,24 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(SolutionDir)BridgeHostStartupTask\bin\$(PlatformName)\$(ConfigurationName)\BridgeHostStartupTask.exe" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)\Appx"
-xcopy /y /s "$(SolutionDir)$(PlatformName)\$(ConfigurationName)\BridgeRT\*" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)\AppX\"
-xcopy /y "$(SolutionDir)BridgeHostStartupTask\bin\$(PlatformName)\$(ConfigurationName)\BridgeHostStartupTask.exe" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)\"
-xcopy /y /s "$(SolutionDir)$(PlatformName)\$(ConfigurationName)\BridgeRT\*" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)\"
-copy /y "$(ProjectDir)Packaging\AppxSources.txt" "$(TargetDir)"
-copy /y "$(ProjectDir)Packaging\AppxSources.txt" "$(TargetDir)\Appx"
-copy /y "$(ProjectDir)Packaging\*.cer" "$(TargetDir)"
-copy /y "$(ProjectDir)Packaging\*.cer" "$(TargetDir)\Appx"
-copy /y "$(ProjectDir)Packaging\AppxManifest-centennial.xml" "$(TargetDir)\AppxManifest.xml"
-copy /y "$(ProjectDir)Packaging\AppxManifest-centennial.xml" "$(TargetDir)\Appx\AppxManifest.xml"
-copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)"
-copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" "$(SolutionDir)\BridgeHost\bin\$(PlatformName)\$(ConfigurationName)\Appx"
-"C:\Program Files (x86)\Windows Kits\10\bin\x64\makeappx.exe"  pack /o /v /f AppxSources.txt /p OpenT2TCent.appx
-"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe"    sign /a /v /fd SHA256 /f appcert.cer OpenT2TCent.appx</PostBuildEvent>
+    <PostBuildEvent>cd /d $(ProjectDir)bin\AppXFiles
+copy /y "$(ProjectDir)Packaging\AppxSources.txt" "$(ProjectDir)bin\AppXFiles"
+copy /y "$(ProjectDir)Packaging\*.cer" "$(ProjectDir)bin\AppXFiles"
+copy /y "$(ProjectDir)Packaging\AppxManifest-centennial.xml" "$(ProjectDir)bin\AppXFiles\AppxManifest.xml"
+copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" "$(ProjectDir)bin\AppXFiles"
+copy "$(ProjectDir)bin\AppXFiles\BridgeHostStartupTask.exe" $(TargetDir)
+copy "$(ProjectDir)bin\AppXFiles\BridgeHostStartupTask.exe" $(TargetDir)\Appx
+
+md "$(ProjectDir)bin\AppXFiles\Assets"
+copy /y "$(TargetDir)\Assets\*.*" "$(ProjectDir)bin\AppXFiles\Assets"
+copy /y "$(TargetDir)\OpenT2TAllJoynBridgeHost.xr.xml" "$(ProjectDir)bin\AppXFiles\OpenT2TAllJoynBridgeHost.xr.xml"
+copy /y "$(TargetDir)\resources.pri" "$(ProjectDir)bin\AppXFiles\resources.pri"
+copy /y "$(TargetDir)\ClrCompression.dll" "$(ProjectDir)bin\AppXFiles\ClrCompression.dll"
+copy /y "$(TargetDir)\OpenT2TAllJoynBridgeHost.exe" "$(ProjectDir)bin\AppXFiles\OpenT2TAllJoynBridgeHost.exe"
+
+"C:\Program Files (x86)\Windows Kits\10\bin\x64\makeappx.exe"  pack /o /v /f AppxSources.txt /p  $(ProjectDir)bin\AppXFiles\OpenT2TCent_$(ConfigurationName)_$(PlatformName).appx
+"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe"    sign /a /v /fd SHA256 /f appcert.cer $(ProjectDir)bin\AppXFiles\OpenT2TCent_$(ConfigurationName)_$(PlatformName).appx
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

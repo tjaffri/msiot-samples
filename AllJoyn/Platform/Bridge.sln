@@ -42,6 +42,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BridgeRT", "BridgeRT\Bridge
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeHost", "BridgeHost\BridgeHost.csproj", "{68E3E0F8-DF4C-4A7C-A8D2-F1000E2219D1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC907CB5-2F85-4C6E-937F-64BA9E1B9202} = {CC907CB5-2F85-4C6E-937F-64BA9E1B9202}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeHostStartupTask", "BridgeHostStartupTask\BridgeHostStartupTask.csproj", "{CC907CB5-2F85-4C6E-937F-64BA9E1B9202}"
 EndProject

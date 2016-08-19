@@ -135,6 +135,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\x86\jx.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -152,6 +157,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\x86\jx.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -169,6 +179,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\arm\jx.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -186,6 +201,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\arm\jx.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -209,6 +229,11 @@
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\x64\jx.lib</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -226,6 +251,11 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);$(OutDir)..\BridgeUW\BridgeUW.lib;$(Outdir)..\ScriptAdapterLibUW\ScriptAdapterLibUW.lib;..\External\JxCore\lib\Windows\x64\jx.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>md "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetFileName) "$(SolutionDir)\BridgeHost\bin\AppXFiles"
+copy $(TargetDir)$(TargetName).winmd "$(SolutionDir)\BridgeHost\bin\AppXFiles"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BridgeJs.h" />

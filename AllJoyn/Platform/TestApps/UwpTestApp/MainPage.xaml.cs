@@ -130,7 +130,14 @@ namespace UwpTestApp
                     // Get the schema and translaor files files
                     var deviceInfo = await GetBridgeAppServiceValueSet(device.Name, device.Props, jsFile, schemaFile);
                     var response = await openT2TBridgeArchitestrationService.SendMessageAsync(deviceInfo);
-                    msg.Text = response.Message["response"] as string;
+                    if (response.Status == AppServiceResponseStatus.Success)
+                    {
+                        msg.Text = response.Message["response"] as string;
+                    }
+                    else
+                    {
+                        msg.Text = "App service Response failure code: " + response.Status.ToString();
+                    }
                 }
             }
             catch (Exception ex)

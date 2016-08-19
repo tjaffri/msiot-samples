@@ -47,8 +47,9 @@ Startup task has the health check (does every 5 seconds) and starts app service 
 ## Steps to build & deploy
 	1. Ensure that the certs in the packaging folder are good.
 	2. Ensure windows SDK is installed. Post build steps specially look for makeappx.exe and signtool.exe in "C:\Program Files (x86)\Windows Kits\10\bin\<arch>"
-	3. Just build the solution/project. It generates OpenT2TCent.appx in the release folder.
-
+	3. Just build the solution. It generates OpenT2TCent.appx in the BridgeHost\bin\AppXFiles.
+	Whenever a change is made to BridgeHostStartupTask project, make sure it is built first, before building BridgeHost that makes the appx.
+	
 	** NOTE: We can create appx bundle that includes the OpenT2T Console/client app as well. 
 
 ### Testing the app On the target machine
