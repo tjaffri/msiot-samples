@@ -20,8 +20,13 @@ using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Threading.Tasks;
 
 using BridgeRT;
+using Windows.Foundation.Collections;
+using Windows.ApplicationModel.DataTransfer;
+using System.IO;
+using Windows.ApplicationModel.AppService;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -34,6 +39,7 @@ namespace UwpTestApp
     {
         BridgeJs bridge;
         bool gotError;
+        AppServiceConnection openT2TBridgeArchitestrationService = null;
 
         public MainPage()
         {
@@ -46,7 +52,7 @@ namespace UwpTestApp
             deviceName.Text = "My test device";
             vendor.Text = "Test vendor";
             model.Text = "light";
-            props.Text = "{\"AuthToken\": \"d26e46dd-e8e3-4048-9164-3cb3c79d7dac\", \"ControlId\": \"81d21115-cf03-4ebb-8517-7b5e851bf0d9\", \"ControlString\": \"/switch\" }";
+            props.Text = "{\"id\":\"1833441\",\"access_token\":\"ZxYq1n4Sl_c72e3zPFzq51yv580IhX9c\"}";
             javascriptFileName.Text = "device.js";
             schemaFileName.Text = "device.xml";
             modulesPath.Text = ".";
@@ -89,13 +95,48 @@ namespace UwpTestApp
                 string jsFile = javascriptFileName.Text;
                 string modPath = modulesPath.Text;
 
-                // Load the schema
-                string baseXml = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(schemaFile));
-                // Load the javascript
-                string script = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(jsFile));
+                if (AppSvcChkBox.IsChecked == false) // Directly call into bridge
+                {
+                    // Load the schema
+                    string baseXml = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(schemaFile));
+                    // Load the javascript
+                    string script = await FileIO.ReadTextAsync(await Package.Current.InstalledLocation.GetFileAsync(jsFile));
 
-                await bridge.AddDeviceAsync(device, baseXml, script, modPath);
-                msg.Text = "Device added";
+                    await bridge.AddDeviceAsync(device, baseXml, script, modPath);
+                    msg.Text = "Device added";
+                }
+                else // Go through App Service, which in turns call into and hosts the bridge.
+                {
+                    // Add the connection.
+                    if (openT2TBridgeArchitestrationService == null)
+                    {
+                        openT2TBridgeArchitestrationService = new AppServiceConnection();
+
+                        openT2TBridgeArchitestrationService.AppServiceName = "CommunicationService";
+                        openT2TBridgeArchitestrationService.PackageFamilyName = "OpenT2TAllJoynBridgeHost_a6049pvczh34w"; // Microsoft.AppServiceBridge_8wekyb3d8bbwe";
+
+                        var status = await openT2TBridgeArchitestrationService.OpenAsync();
+                        if (status != AppServiceConnectionStatus.Success)
+                        {
+                            msg.Text = "Failed to connect to App Service: " + status.ToString();
+                            return;
+                        }
+                    }
+                    openT2TBridgeArchitestrationService.RequestReceived += OpenT2TBridgeArchitestrationService_RequestReceived;
+                    openT2TBridgeArchitestrationService.ServiceClosed += OpenT2TBridgeArchitestrationService_ServiceClosed;
+
+                    // Get the schema and translaor files files
+                    var deviceInfo = await GetBridgeAppServiceValueSet(device.Name, device.Props, jsFile, schemaFile);
+                    var response = await openT2TBridgeArchitestrationService.SendMessageAsync(deviceInfo);
+                    if (response.Status == AppServiceResponseStatus.Success)
+                    {
+                        msg.Text = response.Message["response"] as string;
+                    }
+                    else
+                    {
+                        msg.Text = "App service Response failure code: " + response.Status.ToString();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -103,6 +144,61 @@ namespace UwpTestApp
                 {
                     msg.Text = "AddDevice exception: " + ex.Message;
                 }
+            }
+        }
+
+        private void OpenT2TBridgeArchitestrationService_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        {
+            msg.Text = "App Service closed";
+            openT2TBridgeArchitestrationService = null;
+        }
+
+        private void OpenT2TBridgeArchitestrationService_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<ValueSet> GetBridgeAppServiceValueSet(string name, string props, string jsFile, string schemaFile)
+        {
+            // Get the data from application data (cached). If not present, create and add.
+            var appData = Windows.Storage.ApplicationData.Current.LocalSettings;
+            var translatorsContainer = appData.CreateContainer("Translators", ApplicationDataCreateDisposition.Always);
+
+            object translatorJsSharingToken = null;
+            if (!translatorsContainer.Values.TryGetValue("translatorJs", out translatorJsSharingToken))
+            {
+                StorageFile translatorJs = await Package.Current.InstalledLocation.GetFileAsync(jsFile);
+                translatorJsSharingToken = SharedStorageAccessManager.AddFile(translatorJs);
+                translatorsContainer.Values.Add("translatorJs", translatorJsSharingToken);
+            }
+
+            ValidateForNonNullData(translatorJsSharingToken, "Translator JavaScript File sharing token");
+
+            object schemaSharingToken = null;
+            if (!translatorsContainer.Values.TryGetValue("schema", out schemaSharingToken))
+            {
+                StorageFile schema = await Package.Current.InstalledLocation.GetFileAsync(schemaFile);
+                schemaSharingToken = SharedStorageAccessManager.AddFile(schema);
+                translatorsContainer.Values.Add("schema", schemaSharingToken);
+            }
+            ValidateForNonNullData(schemaSharingToken, "Schema File sharing token");
+
+            // Build Valueset
+            ValueSet deviceInfo = new ValueSet();
+            deviceInfo.Add("command", "AddDevice");
+            deviceInfo.Add("translatorJs", translatorJsSharingToken);
+            deviceInfo.Add("schema", schemaSharingToken);
+            deviceInfo.Add("name", name);
+            deviceInfo.Add("props", props); // Props must contain 'id:<deviceid>', to (locally) unique identify the device.
+            deviceInfo.Add("category", "TestDevice"); // Used to create a data container at the app service side, to cache the onbairding details. ex: WinkLightBulb, WinkThermostat, NestThermostat
+
+            return deviceInfo;
+        }
+        private void ValidateForNonNullData(object o, string name)
+        {
+            if (o == null)
+            {
+                throw new InvalidDataException(name + " must be valid");
             }
         }
     }

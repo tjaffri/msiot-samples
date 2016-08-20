@@ -168,35 +168,36 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions) QCC_OS_GROUP_WINDOWS</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\Bridge;..\Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\BridgeCore;..\ScriptAdapterLib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(Outdir)..\Bridge\Bridge.lib;$(Outdir)..\ScriptAdapterLib\ScriptAdapterLib.lib;$(Outdir)..\Common\Common.lib;msajapi.lib;ole32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(Outdir)Bridge.lib;$(Outdir)ScriptAdapterLib.lib;msajapi.lib;ole32.lib;..\..\External\JxCore\lib\Windows\x86\jx.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions) QCC_OS_GROUP_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions) QCC_OS_GROUP_WINDOWS</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\Bridge;..\Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\BridgeCore;..\ScriptAdapterLib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(Outdir)..\Bridge\Bridge.lib;$(Outdir)..\ScriptAdapterLib\ScriptAdapterLib.lib;$(Outdir)..\Common\Common.lib;msajapi.lib;ole32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(Outdir)Bridge.lib;$(Outdir)ScriptAdapterLib.lib;msajapi.lib;ole32.lib;..\..\External\JxCore\lib\Windows\arm\jx.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions) QCC_OS_GROUP_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QCC_OS_GROUP_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\Bridge;..\Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\External\boost;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;%(AdditionalIncludeDirectories);..\BridgeCore;..\ScriptAdapterLib</AdditionalIncludeDirectories>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(Outdir)..\Bridge\Bridge.lib;$(Outdir)..\ScriptAdapterLib\ScriptAdapterLib.lib;$(Outdir)..\Common\Common.lib;msajapi.lib;ole32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(Outdir)Bridge.lib;$(Outdir)ScriptAdapterLib.lib;msajapi.lib;ole32.lib;..\..\External\JxCore\lib\Windows\x64\jx.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -232,6 +233,11 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BridgeCore\Bridge.vcxproj">
+      <Project>{e6a2e338-fee8-4296-ae78-f1f39aaf93ee}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

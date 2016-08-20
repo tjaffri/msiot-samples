@@ -138,6 +138,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\boost;..\BridgeCore;..\BridgeCore\Windows;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BRIDGE_WIN10;QCC_OS_GROUP_WINDOWS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,6 +166,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\boost;..\BridgeCore;..\BridgeCore\Windows;;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BRIDGE_WIN10;QCC_OS_GROUP_WINDOWS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -192,6 +194,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\External\boost;..\BridgeCore;..\BridgeCore\Windows;$(WindowsSdkDir_10)\Include\$(TargetPlatformVersion)\um\AllJoyn;$(ProjectDir);$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BRIDGE_WIN10;QCC_OS_GROUP_WINDOWS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
