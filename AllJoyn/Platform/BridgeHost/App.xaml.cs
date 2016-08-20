@@ -36,17 +36,13 @@ namespace OpenT2T.Bridge
     [DataContract]
     internal class DeviceProps
     {
-        public DeviceProps(string identifier, string accessToken)
+        public DeviceProps(string identifier)
         {
             id = identifier;
-            access_token = accessToken;
         }
 
         [DataMember]
         internal string id;
-
-        [DataMember]
-        internal string access_token;
     }
 
     /// <summary>
@@ -152,6 +148,17 @@ namespace OpenT2T.Bridge
                 {
                     try
                     {
+                        // Extract ID from the props and insert into the value set.
+                        DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(DeviceProps));
+                        MemoryStream ms = new MemoryStream(System.Text.UTF8Encoding.UTF8.GetBytes(onboardingData["props"] as string));
+                        DeviceProps deviceProps = (DeviceProps)js.ReadObject(ms);
+
+                        if((deviceProps.id == null) || (deviceProps.id == ""))
+                        {
+                            throw new Exception("Device props do not contain 'id', which is required to uniquely identify the device. This is used for storing and matching the device to avoid duplicate onboarding of the same device.");
+                        }
+
+                        onboardingData.Add("id", deviceProps.id);
                         await AddDeviceToAllJoynAsync(onboardingData);
                         response = "succeeded";
                     }
@@ -260,12 +267,7 @@ namespace OpenT2T.Bridge
                 /// Populate DeviceInfo object
                 var device = new BridgeRT.DeviceInfo();
                 device.Name = onboardingData["name"] as string;
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(DeviceProps));
-                MemoryStream memStream = new MemoryStream();
-                jsonSerializer.WriteObject(memStream, new DeviceProps(onboardingData["id"] as string, onboardingData["access_token"] as string));
-                memStream.Position = 0;
-                StreamReader reader = new StreamReader(memStream);
-                device.Props = reader.ReadToEnd();
+                device.Props = onboardingData["props"] as string;
 
                 var translatorJsSharingToken = onboardingData["translatorJs"] as string;
                 var schemaSharingToken = onboardingData["schema"] as string;

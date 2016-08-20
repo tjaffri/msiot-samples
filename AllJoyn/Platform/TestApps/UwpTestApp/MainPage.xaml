@@ -8,8 +8,8 @@
     mc:Ignorable="d"
     Height="380" Width="525" >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel HorizontalAlignment="Center" Margin="6,6,6,6" VerticalAlignment="Stretch" Width="497" Orientation="Vertical">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0,-56">
+        <StackPanel HorizontalAlignment="Center" Margin="14,6,14,-59" VerticalAlignment="Stretch" Width="497" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
                 <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Width="100"> Device Name:</TextBlock>
                 <TextBox x:Name="deviceName" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
@@ -42,7 +42,7 @@
             <CheckBox x:Name="AppSvcChkBox" Content="Use App Service" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,337,0"/>
             <Button Click="AddButton_Click" Content="Add device"/>
             <StackPanel Orientation="Horizontal" Margin="2,2,2,2">
-                <TextBox x:Name="msg" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+                <TextBox x:Name="msg" HorizontalAlignment="Left" Width="480" Margin="10,0,0,0" Height="71"/>
             </StackPanel>
         </StackPanel>
     </Grid>

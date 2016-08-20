@@ -25,8 +25,6 @@ using System.Threading.Tasks;
 using BridgeRT;
 using Windows.Foundation.Collections;
 using Windows.ApplicationModel.DataTransfer;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
 using System.IO;
 using Windows.ApplicationModel.AppService;
 
@@ -160,32 +158,8 @@ namespace UwpTestApp
             throw new NotImplementedException();
         }
 
-        [DataContract]
-        internal class DeviceProps
-        {
-            public static DeviceProps CreateInstance(string id, string accessToken)
-            {
-                return new DeviceProps(id, accessToken);
-            }
-            private DeviceProps(string identifier, string accessToken)
-            {
-                id = identifier;
-                access_token = accessToken;
-            }
-
-            [DataMember]
-            internal string id;
-
-            [DataMember]
-            internal string access_token;
-        }
-        // TODO : Currently Vendor/Model are not sent to app service, which also do not look for them. 
         private async Task<ValueSet> GetBridgeAppServiceValueSet(string name, string props, string jsFile, string schemaFile)
         {
-            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(DeviceProps));
-            MemoryStream ms = new MemoryStream(System.Text.UTF8Encoding.UTF8.GetBytes(props));
-            DeviceProps deviceProps = (DeviceProps)js.ReadObject(ms);
-
             // Get the data from application data (cached). If not present, create and add.
             var appData = Windows.Storage.ApplicationData.Current.LocalSettings;
             var translatorsContainer = appData.CreateContainer("Translators", ApplicationDataCreateDisposition.Always);
@@ -215,8 +189,7 @@ namespace UwpTestApp
             deviceInfo.Add("translatorJs", translatorJsSharingToken);
             deviceInfo.Add("schema", schemaSharingToken);
             deviceInfo.Add("name", name);
-            deviceInfo.Add("id", deviceProps.id);
-            deviceInfo.Add("access_token", deviceProps.access_token);
+            deviceInfo.Add("props", props); // Props must contain 'id:<deviceid>', to (locally) unique identify the device.
             deviceInfo.Add("category", "TestDevice"); // Used to create a data container at the app service side, to cache the onbairding details. ex: WinkLightBulb, WinkThermostat, NestThermostat
 
             return deviceInfo;

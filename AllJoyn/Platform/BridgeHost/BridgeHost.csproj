@@ -185,7 +185,11 @@
 copy /y "$(ProjectDir)Packaging\AppxSources.txt" "$(ProjectDir)bin\AppXFiles"
 copy /y "$(ProjectDir)Packaging\*.cer" "$(ProjectDir)bin\AppXFiles"
 copy /y "$(ProjectDir)Packaging\AppxManifest-centennial.xml" "$(ProjectDir)bin\AppXFiles\AppxManifest.xml"
+
 copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" "$(ProjectDir)bin\AppXFiles"
+copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" $(TargetDir)
+copy /y "$(SolutionDir)External\JxCore\lib\Windows\$(PlatformName)\jx.dll" $(TargetDir)\Appx
+
 copy "$(ProjectDir)bin\AppXFiles\BridgeHostStartupTask.exe" $(TargetDir)
 copy "$(ProjectDir)bin\AppXFiles\BridgeHostStartupTask.exe" $(TargetDir)\Appx
 
